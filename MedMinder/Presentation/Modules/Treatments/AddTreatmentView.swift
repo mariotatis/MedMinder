@@ -229,8 +229,7 @@ struct AddTreatmentView: View {
                             presentationMode.wrappedValue.dismiss()
                         }) {
                             Image(systemName: "xmark")
-                                .font(.headline)
-                                .foregroundColor(.textPrimary)
+                                .foregroundColor(.gray)
                         }
                     }
                 }
@@ -239,14 +238,14 @@ struct AddTreatmentView: View {
                     if viewModel.isEditing {
                         NavigationLink(destination: EditTreatmentView(viewModel: viewModel)) {
                             Text("Edit")
-                            .foregroundColor(.gray)
+                            .foregroundColor(.primaryAction)
                         }
                     } else {
                         Button(action: {
                             viewModel.saveTreatment()
                         }) {
                             Text("Save")
-                            .foregroundColor(.gray)
+                            .foregroundColor(.primaryAction)
                         }
                     }
                 }

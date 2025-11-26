@@ -6,6 +6,8 @@ struct ProfileListView: View {
     
     // Dependency
     let profileUseCases: ProfileUseCases
+    let treatmentUseCases: TreatmentUseCases
+    let medicationUseCases: MedicationUseCases
     
     var body: some View {
         NavigationView {
@@ -42,10 +44,12 @@ struct ProfileListView: View {
                     ScrollView {
                         LazyVStack(spacing: 16) {
                             ForEach(viewModel.profiles) { profile in
-                                NavigationLink(destination: AddProfileView(viewModel: AddProfileViewModel(
-                                    profileUseCases: viewModel.profileUseCases,
+                                NavigationLink(destination: ProfileDetailView(viewModel: ProfileDetailViewModel(
                                     profile: profile,
-                                    onSave: { _ in viewModel.fetchProfiles() }
+                                    treatmentUseCases: treatmentUseCases,
+                                    profileUseCases: profileUseCases,
+                                    medicationUseCases: medicationUseCases,
+                                    onDelete: { viewModel.fetchProfiles() }
                                 ))) {
                                     HStack(spacing: 16) {
                                         ProfileAvatar(profile: profile, size: 60)

@@ -149,7 +149,7 @@ struct AddMedicationView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: viewModel.saveMedication) {
                     Text("Save")
-                    .foregroundColor(.gray)
+                    .foregroundColor(.primaryAction)
                 }
             }
         }.onReceive(viewModel.$shouldDismiss) { shouldDismiss in

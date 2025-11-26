@@ -123,6 +123,7 @@ struct EditTreatmentView: View {
                     }
                 }) {
                     Text("Save")
+                        .foregroundColor(.primaryAction)
                 }
             }
         }

@@ -142,7 +142,7 @@ class HomeViewModel: ObservableObject {
                     
                     if !isLogged {
                         let isTaken = doseLog?.status == .taken
-                        doses.append(MedicationDose(id: UUID(), medication: med, profile: profile, scheduledTime: currentDoseTime, isTaken: isTaken))
+                        doses.append(MedicationDose(id: UUID(), medication: med, profile: profile, treatmentName: treatment.name, scheduledTime: currentDoseTime, isTaken: isTaken))
                     }
                     
                     currentDoseTime.addTimeInterval(frequencySeconds)
@@ -243,6 +243,7 @@ struct MedicationDose: Identifiable {
     let id: UUID
     let medication: Medication
     let profile: Profile?
+    let treatmentName: String
     let scheduledTime: Date
     let isTaken: Bool
 }

@@ -5,6 +5,7 @@ struct MedicationCard: View {
     let profile: Profile?
     let time: Date
     var isCurrentPeriod: Bool = false
+    var treatmentName: String? = nil
     
     var body: some View {
         HStack(spacing: 16) {
@@ -25,9 +26,15 @@ struct MedicationCard: View {
                     .font(.headline)
                     .foregroundColor(.textPrimary)
                 
-                Text(medication.dosage)
+                Text("\(medication.dosage)")
                     .font(.subheadline)
                     .foregroundColor(.textSecondary)
+                
+                if let treatmentName = treatmentName {
+                    Text(treatmentName)
+                        .font(.caption)
+                        .foregroundColor(.textSecondary.opacity(0.8))
+                }
                 
                 HStack(spacing: 4) {
                     Text("Next Dose:")

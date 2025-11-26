@@ -37,7 +37,9 @@ struct MedMinderApp: App {
                 
                 ProfileListView(
                     viewModel: ProfileListViewModel(profileUseCases: container.profileUseCases),
-                    profileUseCases: container.profileUseCases
+                    profileUseCases: container.profileUseCases,
+                    treatmentUseCases: container.treatmentUseCases,
+                    medicationUseCases: container.medicationUseCases
                 )
                 .tabItem {
                     Label("Profiles", systemImage: "person.3.fill")

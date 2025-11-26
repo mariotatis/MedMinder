@@ -6,6 +6,7 @@ struct TreatmentCard: View {
     let medicationCount: Int
     var isCompleted: Bool = false
     var showChevron: Bool = false
+    var showProfileInfo: Bool = true
     
     var body: some View {
         HStack(spacing: 16) {
@@ -28,14 +29,16 @@ struct TreatmentCard: View {
                     }
                 }
                 
-                if let profile = profile {
-                    Text("For \(profile.name)")
-                        .font(.subheadline)
-                        .foregroundColor(.textSecondary)
-                } else {
-                    Text("Unassigned")
-                        .font(.subheadline)
-                        .foregroundColor(.textSecondary)
+                if showProfileInfo {
+                    if let profile = profile {
+                        Text("For \(profile.name)")
+                            .font(.subheadline)
+                            .foregroundColor(.textSecondary)
+                    } else {
+                        Text("Unassigned")
+                            .font(.subheadline)
+                            .foregroundColor(.textSecondary)
+                    }
                 }
                 
                 Text("Started: ")
@@ -57,8 +60,10 @@ struct TreatmentCard: View {
             
             Spacer()
             
-            ProfileAvatar(profile: profile, size: 70)
-                .padding(.trailing, 4)
+            if showProfileInfo {
+                ProfileAvatar(profile: profile, size: 70)
+                    .padding(.trailing, 4)
+            }
             
             if showChevron {
                 Image(systemName: "chevron.right")

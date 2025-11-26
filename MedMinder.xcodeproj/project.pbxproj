@@ -32,6 +32,9 @@
 		ACDF60C92ED56536003C4F41 /* EditTreatmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60C62ED56536003C4F41 /* EditTreatmentView.swift */; };
 		ACDF60CC2ED5825A003C4F41 /* TreatmentMedicationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60CA2ED5825A003C4F41 /* TreatmentMedicationDetailView.swift */; };
 		ACDF60CD2ED5825A003C4F41 /* TreatmentMedicationDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60CB2ED5825A003C4F41 /* TreatmentMedicationDetailViewModel.swift */; };
+		ACDF60D02ED65DA0003C4F41 /* ProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60CE2ED65DA0003C4F41 /* ProfileDetailView.swift */; };
+		ACDF60D12ED65DA0003C4F41 /* ProfileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60CF2ED65DA0003C4F41 /* ProfileListView.swift */; };
+		ACDF60D32ED65DBE003C4F41 /* ProfileDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60D22ED65DBE003C4F41 /* ProfileDetailViewModel.swift */; };
 		ACFD9ACD2ECF9290003F6E66 /* ProfileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9ACB2ECF9290003F6E66 /* ProfileListView.swift */; };
 		ACFD9ACE2ECF9290003F6E66 /* ProfileListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9ACC2ECF9290003F6E66 /* ProfileListViewModel.swift */; };
 		ACFD9AD12ED048CB003F6E66 /* TreatmentDosageRegistryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9ACF2ED048CB003F6E66 /* TreatmentDosageRegistryView.swift */; };
@@ -72,6 +75,9 @@
 		ACDF60C72ED56536003C4F41 /* TreatmentCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreatmentCard.swift; sourceTree = "<group>"; };
 		ACDF60CA2ED5825A003C4F41 /* TreatmentMedicationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreatmentMedicationDetailView.swift; sourceTree = "<group>"; };
 		ACDF60CB2ED5825A003C4F41 /* TreatmentMedicationDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreatmentMedicationDetailViewModel.swift; sourceTree = "<group>"; };
+		ACDF60CE2ED65DA0003C4F41 /* ProfileDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailView.swift; sourceTree = "<group>"; };
+		ACDF60CF2ED65DA0003C4F41 /* ProfileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListView.swift; sourceTree = "<group>"; };
+		ACDF60D22ED65DBE003C4F41 /* ProfileDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailViewModel.swift; sourceTree = "<group>"; };
 		ACFD9ACB2ECF9290003F6E66 /* ProfileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListView.swift; sourceTree = "<group>"; };
 		ACFD9ACC2ECF9290003F6E66 /* ProfileListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListViewModel.swift; sourceTree = "<group>"; };
 		ACFD9ACF2ED048CB003F6E66 /* TreatmentDosageRegistryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreatmentDosageRegistryView.swift; sourceTree = "<group>"; };
@@ -202,6 +208,9 @@
 				6A7A7B4B328997BFC8F74093 /* AddProfileViewModel.swift */,
 				ACFD9ACB2ECF9290003F6E66 /* ProfileListView.swift */,
 				ACFD9ACC2ECF9290003F6E66 /* ProfileListViewModel.swift */,
+				ACDF60CE2ED65DA0003C4F41 /* ProfileDetailView.swift */,
+				ACDF60CF2ED65DA0003C4F41 /* ProfileListView.swift */,
+				ACDF60D22ED65DBE003C4F41 /* ProfileDetailViewModel.swift */,
 			);
 			path = Profiles;
 			sourceTree = "<group>";
@@ -333,6 +342,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ACDF60D02ED65DA0003C4F41 /* ProfileDetailView.swift in Sources */,
+				ACDF60D12ED65DA0003C4F41 /* ProfileListView.swift in Sources */,
 				F7ACA909D882ECE4793E11F6 /* AddMedicationView.swift in Sources */,
 				ACFD9ACD2ECF9290003F6E66 /* ProfileListView.swift in Sources */,
 				ACFD9ACE2ECF9290003F6E66 /* ProfileListViewModel.swift in Sources */,
@@ -340,6 +351,7 @@
 				98ACDEE10546B0D756E704D0 /* AddProfileView.swift in Sources */,
 				ACDF60CC2ED5825A003C4F41 /* TreatmentMedicationDetailView.swift in Sources */,
 				ACDF60CD2ED5825A003C4F41 /* TreatmentMedicationDetailViewModel.swift in Sources */,
+				ACDF60D32ED65DBE003C4F41 /* ProfileDetailViewModel.swift in Sources */,
 				ACB605F3A9F720FEF650CDE6 /* AddProfileViewModel.swift in Sources */,
 				193E06CE33323CE83631B707 /* AddTreatmentView.swift in Sources */,
 				AF46808DBA0668F685C28D2D /* AddTreatmentViewModel.swift in Sources */,

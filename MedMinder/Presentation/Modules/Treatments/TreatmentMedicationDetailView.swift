@@ -140,7 +140,7 @@ struct TreatmentMedicationDetailView: View {
                     showEditMedication = true
                 }) {
                     Text("Edit")
-                    .foregroundColor(.gray)
+                    .foregroundColor(.primaryAction)
                 }
             }
         }

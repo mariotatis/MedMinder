@@ -72,7 +72,8 @@ struct HomeView: View {
                                                     medication: dose.medication,
                                                     profile: dose.profile,
                                                     time: dose.scheduledTime,
-                                                    isCurrentPeriod: section.isCurrent
+                                                    isCurrentPeriod: section.isCurrent,
+                                                    treatmentName: dose.treatmentName
                                                 )
                                             }
                                             .padding(.horizontal)
@@ -116,7 +117,8 @@ struct HomeView: View {
                                                     medication: dose.medication,
                                                     profile: dose.profile,
                                                     time: dose.scheduledTime,
-                                                    isCurrentPeriod: false
+                                                    isCurrentPeriod: false,
+                                                    treatmentName: dose.treatmentName
                                                 )
                                             }
                                             .padding(.horizontal)

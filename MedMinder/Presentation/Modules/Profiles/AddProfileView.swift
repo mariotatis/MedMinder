@@ -49,6 +49,7 @@ struct AddProfileView: View {
                 
                 VStack(spacing: 16) {
                     CustomTextField(title: "Name", placeholder: "Enter name", text: $viewModel.name)
+                        .textInputAutocapitalization(.words)
                     CustomTextField(title: "Age (Optional)", placeholder: "Enter age", text: $viewModel.age)
                         .keyboardType(.numberPad)
                 }
@@ -81,7 +82,7 @@ struct AddProfileView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                if !viewModel.isEditing && !hideCloseButton {
+                if !hideCloseButton {
                     Button(action: { presentationMode.wrappedValue.dismiss() }) {
                         Image(systemName: "xmark")
                             .foregroundColor(.gray) // User requested grey
@@ -92,7 +93,7 @@ struct AddProfileView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: viewModel.saveProfile) {
                     Text("Save")
-                    .foregroundColor(.gray)
+                    .foregroundColor(.primaryAction)
                 }
             }
         }
