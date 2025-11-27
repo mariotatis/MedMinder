@@ -258,4 +258,40 @@ class AddTreatmentViewModel: ObservableObject {
             }
         }
     }
+
+    
+    func getMedicationStatus(medication: Medication) -> (isCompleted: Bool, upcomingCount: Int) {
+        let durationDays = medication.durationDays
+        let frequencyHours = medication.frequencyHours
+        
+        if durationDays <= 0 || frequencyHours <= 0 {
+            return (false, 0)
+        }
+        
+        let calendar = Calendar.current
+        let now = Date()
+        let endDate = calendar.date(byAdding: .day, value: durationDays, to: medication.initialTime) ?? now
+        let frequencySeconds = Double(frequencyHours) * 3600
+        
+        var expectedDoses: [Date] = []
+        var currentTime = medication.initialTime
+        
+        while currentTime <= endDate {
+            expectedDoses.append(currentTime)
+            currentTime += frequencySeconds
+        }
+        
+        // Count logged doses
+        let medLogs = doseLogs.filter { $0.medicationId == medication.id && ($0.status == .taken || $0.status == .skipped) }
+        
+        // Check completion (count-based)
+        let isCompleted = medLogs.count >= expectedDoses.count
+        
+        if isCompleted {
+            return (true, 0)
+        }
+        
+        let remaining = max(0, expectedDoses.count - medLogs.count)
+        return (false, remaining)
+    }
 }

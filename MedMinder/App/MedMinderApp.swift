@@ -42,12 +42,12 @@ struct MedMinderApp: App {
                     medicationUseCases: container.medicationUseCases
                 )
                 .tabItem {
-                    Label("Profiles", systemImage: "person.3.fill")
+                    Label("Profiles", systemImage: "person.2.fill")
                 }
                 .tag(2)
             }
             .accentColor(.primaryAction)
-            .preferredColorScheme(.dark) // Force dark mode as per design
+            //.preferredColorScheme(.dark) // Force dark mode as per design
         }
     }
 }
