@@ -99,11 +99,6 @@ struct ProfileDetailView: View {
                 ))
             }
         }
-        .onAppear {
-            viewModel.fetchTreatments()
-            viewModel.fetchMedications()
-            viewModel.fetchDoseLogs()
-        }
         .onReceive(viewModel.$shouldDismiss) { shouldDismiss in
             if shouldDismiss {
                 presentationMode.wrappedValue.dismiss()

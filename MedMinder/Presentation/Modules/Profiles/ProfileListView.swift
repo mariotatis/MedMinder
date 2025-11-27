@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileListView: View {
     @StateObject var viewModel: ProfileListViewModel
     @State private var showAddProfile = false
+    @State private var hasAppeared = false
     
     // Dependency
     let profileUseCases: ProfileUseCases
@@ -103,7 +104,10 @@ struct ProfileListView: View {
             }
         }
         .onAppear {
-            viewModel.fetchProfiles()
+            if !hasAppeared {
+                viewModel.fetchProfiles()
+                hasAppeared = true
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             // Only refresh when app comes to foreground, not on tab switches
