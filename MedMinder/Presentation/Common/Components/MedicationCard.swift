@@ -55,6 +55,7 @@ struct MedicationCard: View {
             }
             
             Image(systemName: "chevron.right")
+                .font(.caption)
                 .foregroundColor(.textSecondary)
         }
         .padding()

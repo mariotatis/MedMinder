@@ -27,6 +27,8 @@
 		9FDBDE2EDEEECF295ED60D31 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40406047ADAB3DF5FDB2AAB /* CustomTextField.swift */; };
 		A43A746B1A9873DEF5F45528 /* LocalRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B1A6EA577A5E1AE522516 /* LocalRepositories.swift */; };
 		AA0FFA7ADDCB84D31C4203F3 /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08377973F9951133FC385721 /* AppContainer.swift */; };
+		AC830C732ED831B80073805A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC830C712ED831B80073805A /* SettingsView.swift */; };
+		AC830C792ED8DFB70073805A /* HealthQuotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC830C772ED8DFB70073805A /* HealthQuotes.swift */; };
 		ACB605F3A9F720FEF650CDE6 /* AddProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7A7B4B328997BFC8F74093 /* AddProfileViewModel.swift */; };
 		ACD787B82ED7C1C000685EA1 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC4C8B032ED7B91600A2B292 /* Media.xcassets */; };
 		ACDF60C82ED56536003C4F41 /* TreatmentCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60C72ED56536003C4F41 /* TreatmentCard.swift */; };
@@ -72,6 +74,8 @@
 		9C4EB717574503CD8F8B3DBA /* MedicationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDetailView.swift; sourceTree = "<group>"; };
 		AA1297DEB3ACC7C991ED3106 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		AC4C8B032ED7B91600A2B292 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		AC830C712ED831B80073805A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AC830C772ED8DFB70073805A /* HealthQuotes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthQuotes.swift; sourceTree = "<group>"; };
 		ACD787B02ED7BF0200685EA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ACDF60C62ED56536003C4F41 /* EditTreatmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTreatmentView.swift; sourceTree = "<group>"; };
 		ACDF60C72ED56536003C4F41 /* TreatmentCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreatmentCard.swift; sourceTree = "<group>"; };
@@ -99,6 +103,7 @@
 			children = (
 				10E8B952E244551ED928E759 /* Components */,
 				5772AEFDC68DBBC982C63957 /* Extensions */,
+				AC830C782ED8DFB70073805A /* Constants */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -219,6 +224,22 @@
 			path = Profiles;
 			sourceTree = "<group>";
 		};
+		AC830C722ED831B80073805A /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				AC830C712ED831B80073805A /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		AC830C782ED8DFB70073805A /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				AC830C772ED8DFB70073805A /* HealthQuotes.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
 		B7B668F16C65896DD899A4A4 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -290,6 +311,7 @@
 				F3A548414CE9DC671B34EECC /* Medications */,
 				93C16E848AD721FFB07CE568 /* Profiles */,
 				5CE8D5DD8A4461490F98307A /* Treatments */,
+				AC830C722ED831B80073805A /* Settings */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -370,6 +392,7 @@
 				ACB605F3A9F720FEF650CDE6 /* AddProfileViewModel.swift in Sources */,
 				193E06CE33323CE83631B707 /* AddTreatmentView.swift in Sources */,
 				AF46808DBA0668F685C28D2D /* AddTreatmentViewModel.swift in Sources */,
+				AC830C732ED831B80073805A /* SettingsView.swift in Sources */,
 				AA0FFA7ADDCB84D31C4203F3 /* AppContainer.swift in Sources */,
 				B9A1728BA6AA142CE5BA19BD /* Color+Extensions.swift in Sources */,
 				9FDBDE2EDEEECF295ED60D31 /* CustomTextField.swift in Sources */,
@@ -377,6 +400,7 @@
 				14472A58389078AAD6907576 /* HomeView.swift in Sources */,
 				91B1D601EC5E8A8EF8D7E39F /* HomeViewModel.swift in Sources */,
 				A43A746B1A9873DEF5F45528 /* LocalRepositories.swift in Sources */,
+				AC830C792ED8DFB70073805A /* HealthQuotes.swift in Sources */,
 				D8B8FED3A051A5D4A485AE04 /* MedMinderApp.swift in Sources */,
 				969C40139960477909391DB1 /* Medication.swift in Sources */,
 				369577F7C34866B38B687CEC /* MedicationCard.swift in Sources */,

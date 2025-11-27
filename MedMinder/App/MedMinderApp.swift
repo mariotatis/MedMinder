@@ -16,7 +16,7 @@ struct MedMinderApp: App {
                     )
                 )
                 .tabItem {
-                    Label("Home", systemImage: "heart.fill")
+                    Label("Upcoming", systemImage: "pill.fill")
                 }
                 .tag(0)
                 
@@ -45,6 +45,13 @@ struct MedMinderApp: App {
                     Label("Profiles", systemImage: "person.2.fill")
                 }
                 .tag(2)
+                
+                SettingsView()
+                .tabItem {
+                    Label("More", systemImage: "ellipsis")
+                }
+                .tag(3)
+                
             }
             .accentColor(.primaryAction)
             //.preferredColorScheme(.dark) // Force dark mode as per design

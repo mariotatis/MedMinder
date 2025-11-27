@@ -68,6 +68,7 @@ struct TreatmentCard: View {
             
             if showChevron {
                 Image(systemName: "chevron.right")
+                    .font(.caption)
                     .foregroundColor(.textSecondary)
             }
         }

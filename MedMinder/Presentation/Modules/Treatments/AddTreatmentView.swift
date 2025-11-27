@@ -43,18 +43,32 @@ struct AddTreatmentView: View {
                                 medicationUseCases: viewModel.medicationUseCases
                             )
                         )) {
-                            HStack {
+                            HStack(spacing: 16) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.primaryAction.opacity(0.1))
+                                        .frame(width: 32, height: 32)
+                                    
+                                    Image(systemName: "list.clipboard.fill")
+                                        .font(.caption)
+                                        .foregroundColor(.primaryAction)
+                                }
+                                
                                 Text("Dosage Registry")
-                                    .font(.headline)
+                                    .font(.body)
                                     .foregroundColor(.textPrimary)
+                                
                                 Spacer()
+                                
                                 Image(systemName: "chevron.right")
+                                    .font(.caption)
                                     .foregroundColor(.textSecondary)
                             }
                             .padding()
                             .frame(maxWidth: .infinity)
                             .background(Color.surface)
-                            .cornerRadius(12)
+                            .cornerRadius(16)
+                            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
                         }
                         .buttonStyle(PlainButtonStyle())
                     }
@@ -312,6 +326,7 @@ struct AddTreatmentView: View {
                             }
                             Spacer()
                             Image(systemName: "chevron.right")
+                                .font(.caption)
                                 .foregroundColor(.textSecondary)
                         }
                         .padding()

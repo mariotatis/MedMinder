@@ -132,6 +132,7 @@ struct HomeView: View {
                 }
             }
             .navigationTitle(greeting)
+            .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $showAddTreatment) {
                 NavigationView {
                     AddTreatmentView(viewModel: AddTreatmentViewModel(
