@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct MedMinderApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var container = AppContainer()
     @State private var selectedTab = 0
 
@@ -42,7 +43,7 @@ struct MedMinderApp: App {
                     medicationUseCases: container.medicationUseCases
                 )
                 .tabItem {
-                    Label("Profiles", systemImage: "person.2.fill")
+                    Label("Family", systemImage: "person.2.fill")
                 }
                 .tag(2)
                 
@@ -55,6 +56,22 @@ struct MedMinderApp: App {
             }
             .accentColor(.primaryAction)
             //.preferredColorScheme(.dark) // Force dark mode as per design
+            .onAppear {
+                container.syncReminders()
+            }
         }
+    }
+}
+
+class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        UNUserNotificationCenter.current().delegate = self
+        return true
+    }
+    
+    // This method is called when a notification is delivered to a foreground app.
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        // Show the notification as a banner and play sound even if the app is open
+        completionHandler([.banner, .sound, .list])
     }
 }

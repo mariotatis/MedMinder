@@ -29,6 +29,7 @@
 		AA0FFA7ADDCB84D31C4203F3 /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08377973F9951133FC385721 /* AppContainer.swift */; };
 		AC830C732ED831B80073805A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC830C712ED831B80073805A /* SettingsView.swift */; };
 		AC830C792ED8DFB70073805A /* HealthQuotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC830C772ED8DFB70073805A /* HealthQuotes.swift */; };
+		AC830C7C2ED8E7160073805A /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC830C7A2ED8E7160073805A /* NotificationService.swift */; };
 		ACB605F3A9F720FEF650CDE6 /* AddProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7A7B4B328997BFC8F74093 /* AddProfileViewModel.swift */; };
 		ACD787B82ED7C1C000685EA1 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC4C8B032ED7B91600A2B292 /* Media.xcassets */; };
 		ACDF60C82ED56536003C4F41 /* TreatmentCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60C72ED56536003C4F41 /* TreatmentCard.swift */; };
@@ -76,6 +77,7 @@
 		AC4C8B032ED7B91600A2B292 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		AC830C712ED831B80073805A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AC830C772ED8DFB70073805A /* HealthQuotes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthQuotes.swift; sourceTree = "<group>"; };
+		AC830C7A2ED8E7160073805A /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		ACD787B02ED7BF0200685EA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ACDF60C62ED56536003C4F41 /* EditTreatmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTreatmentView.swift; sourceTree = "<group>"; };
 		ACDF60C72ED56536003C4F41 /* TreatmentCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreatmentCard.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 				C7133714DD6D8BA96611AA65 /* Entities */,
 				18AB9C1482A1F6ACFD07FB26 /* Interfaces */,
 				774E66A4918924945596652F /* UseCases */,
+				AC830C7B2ED8E7160073805A /* Services */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -238,6 +241,14 @@
 				AC830C772ED8DFB70073805A /* HealthQuotes.swift */,
 			);
 			path = Constants;
+			sourceTree = "<group>";
+		};
+		AC830C7B2ED8E7160073805A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AC830C7A2ED8E7160073805A /* NotificationService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		B7B668F16C65896DD899A4A4 /* App */ = {
@@ -404,6 +415,7 @@
 				D8B8FED3A051A5D4A485AE04 /* MedMinderApp.swift in Sources */,
 				969C40139960477909391DB1 /* Medication.swift in Sources */,
 				369577F7C34866B38B687CEC /* MedicationCard.swift in Sources */,
+				AC830C7C2ED8E7160073805A /* NotificationService.swift in Sources */,
 				0F69C8D6C3821298D6B53823 /* MedicationDetailView.swift in Sources */,
 				9473723720DA146E14DA0D12 /* MedicationDetailViewModel.swift in Sources */,
 				ACFD9AD12ED048CB003F6E66 /* TreatmentDosageRegistryView.swift in Sources */,

@@ -81,13 +81,14 @@ class MedicationDetailViewModel: ObservableObject {
         var doses: [Date] = []
         let calendar = Calendar.current
         let now = Date()
-        let todayStart = calendar.startOfDay(for: now)
         
-        var doseTime = calendar.date(bySettingHour: calendar.component(.hour, from: medication.initialTime),
-                                     minute: calendar.component(.minute, from: medication.initialTime),
-                                     second: 0, of: todayStart)!
+        // Calculate End Date
+        guard let endDate = calendar.date(byAdding: .day, value: medication.durationDays, to: medication.initialTime) else { return }
         
-        // Skip to the next upcoming dose
+        // Start from initial time and fast forward to now
+        var doseTime = medication.initialTime
+        
+        // Skip past doses
         while doseTime < now {
             if let next = calendar.date(byAdding: .hour, value: medication.frequencyHours, to: doseTime) {
                 doseTime = next
@@ -96,16 +97,14 @@ class MedicationDetailViewModel: ObservableObject {
             }
         }
         
-        // Calculate total number of doses based on duration
-        let hoursInDay = 24
-        let dosesPerDay = hoursInDay / medication.frequencyHours
-        let totalDoses = dosesPerDay * medication.durationDays
-        
-        // Generate all upcoming doses for the duration
-        for _ in 0..<totalDoses {
+        // Generate upcoming doses until endDate
+        // Limit to a reasonable number (e.g., 50) to prevent infinite loops if something goes wrong
+        var count = 0
+        while doseTime <= endDate && count < 50 {
             doses.append(doseTime)
             if let next = calendar.date(byAdding: .hour, value: medication.frequencyHours, to: doseTime) {
                 doseTime = next
+                count += 1
             } else {
                 break
             }
@@ -115,7 +114,9 @@ class MedicationDetailViewModel: ObservableObject {
     }
     
     var isFutureDose: Bool {
-        return scheduledTime > Date()
+        // Consider it "future" only if it's more than 20 minutes away
+        // If it's within 20 mins, we treat it as "due" (so buttons appear)
+        return scheduledTime > Date().addingTimeInterval(20 * 60)
     }
     
     func markAsTaken() {

@@ -14,13 +14,15 @@ class ProfileDetailViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     private var onDelete: (() -> Void)?
+    private var onUpdate: (() -> Void)?
     
-    init(profile: Profile, treatmentUseCases: TreatmentUseCases, profileUseCases: ProfileUseCases, medicationUseCases: MedicationUseCases, onDelete: (() -> Void)? = nil) {
+    init(profile: Profile, treatmentUseCases: TreatmentUseCases, profileUseCases: ProfileUseCases, medicationUseCases: MedicationUseCases, onDelete: (() -> Void)? = nil, onUpdate: (() -> Void)? = nil) {
         self.profile = profile
         self.treatmentUseCases = treatmentUseCases
         self.profileUseCases = profileUseCases
         self.medicationUseCases = medicationUseCases
         self.onDelete = onDelete
+        self.onUpdate = onUpdate
         
         fetchTreatments()
         fetchMedications()
@@ -62,6 +64,8 @@ class ProfileDetailViewModel: ObservableObject {
                 guard let self = self else { return }
                 if let updatedProfile = profiles.first(where: { $0.id == self.profile.id }) {
                     self.profile = updatedProfile
+                    // Notify parent that profile was updated
+                    self.onUpdate?()
                     // Also refresh treatments in case profile association changed (though unlikely from here)
                     self.fetchTreatments()
                 } else {

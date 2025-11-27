@@ -49,7 +49,8 @@ struct ProfileListView: View {
                                     treatmentUseCases: treatmentUseCases,
                                     profileUseCases: profileUseCases,
                                     medicationUseCases: medicationUseCases,
-                                    onDelete: { viewModel.fetchProfiles() }
+                                    onDelete: { viewModel.fetchProfiles() },
+                                    onUpdate: { viewModel.fetchProfiles() }
                                 ))) {
                                     HStack(spacing: 16) {
                                         ProfileAvatar(profile: profile, size: 60)
@@ -103,6 +104,9 @@ struct ProfileListView: View {
         }
         .onAppear {
             viewModel.fetchProfiles()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            // Only refresh when app comes to foreground, not on tab switches
         }
     }
 }
