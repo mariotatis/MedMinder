@@ -7,6 +7,7 @@ class TreatmentMedicationDetailViewModel: ObservableObject {
     @Published var upcomingDoses: [Date] = []
     @Published var doseHistory: [DoseLog] = []
     @Published var medicationWasDeleted = false
+    @Published var isCompleted: Bool = false
     
     let medicationUseCases: MedicationUseCases
     private let profileUseCases: ProfileUseCases
@@ -79,6 +80,9 @@ class TreatmentMedicationDetailViewModel: ObservableObject {
                 
                 // Generate upcoming doses
                 self.generateUpcomingDoses(existingLogs: medicationLogs)
+                
+                // Check completion
+                self.checkCompletion(existingLogs: medicationLogs)
             })
             .store(in: &cancellables)
     }
@@ -112,5 +116,31 @@ class TreatmentMedicationDetailViewModel: ObservableObject {
         }
         
         upcomingDoses = doses.sorted()
+    }
+    
+    private func checkCompletion(existingLogs: [DoseLog]) {
+        let durationDays = medication.durationDays
+        let frequencyHours = medication.frequencyHours
+        
+        if durationDays <= 0 || frequencyHours <= 0 {
+            self.isCompleted = false
+            return
+        }
+        
+        let calendar = Calendar.current
+        let endDate = calendar.date(byAdding: .day, value: durationDays, to: medication.initialTime) ?? Date()
+        let frequencySeconds = Double(frequencyHours) * 3600
+        
+        var expectedDoses: [Date] = []
+        var currentTime = medication.initialTime
+        
+        while currentTime <= endDate {
+            expectedDoses.append(currentTime)
+            currentTime += frequencySeconds
+        }
+        
+        let takenLogs = existingLogs.filter { $0.status == .taken || $0.status == .skipped }
+        
+        self.isCompleted = takenLogs.count >= expectedDoses.count
     }
 }

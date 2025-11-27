@@ -55,39 +55,63 @@ class TreatmentListViewModel: ObservableObject {
         let treatmentMeds = medications.filter { $0.treatmentId == treatmentId }
         guard !treatmentMeds.isEmpty else { return false }
         
-        let now = Date()
-        
-        // Get all medication IDs for this treatment
-        let treatmentMedicationIds = Set(treatmentMeds.map { $0.id })
-        
-        // Count dose logs for this treatment (taken or skipped only)
-        let treatmentLogs = doseLogs.filter { log in
-            treatmentMedicationIds.contains(log.medicationId) &&
-            (log.status == .taken || log.status == .skipped)
-        }
-        
-        // Check if all medications are past their end date
-        var allPastEndDate = true
-        var hasAnyLogs = !treatmentLogs.isEmpty
+        var allMedsCompleted = true
         
         for med in treatmentMeds {
+            // 1. Calculate expected doses
             let durationDays = med.durationDays
             let frequencyHours = med.frequencyHours
             
             if durationDays <= 0 || frequencyHours <= 0 {
-                return false
+                allMedsCompleted = false
+                break
             }
             
-            let endDate = Calendar.current.date(byAdding: .day, value: durationDays, to: med.initialTime) ?? now
+            let calendar = Calendar.current
+            let endDate = calendar.date(byAdding: .day, value: durationDays, to: med.initialTime) ?? Date()
+            let frequencySeconds = Double(frequencyHours) * 3600
             
-            if now < endDate {
-                allPastEndDate = false
+            var expectedDoses: [Date] = []
+            var currentTime = med.initialTime
+            
+            // Generate all scheduled times
+            while currentTime <= endDate {
+                expectedDoses.append(currentTime)
+                currentTime += frequencySeconds
+            }
+            
+
+            
+            // 2. Check if the number of logged doses (taken/skipped) matches or exceeds the expected count
+            let medLogs = doseLogs.filter { $0.medicationId == med.id && ($0.status == .taken || $0.status == .skipped) }
+            
+            // We use a count-based check because users might take doses late or reschedule them,
+            // causing the log timestamp to differ from the original schedule.
+            // If the user has logged enough doses to cover the treatment duration, it is complete.
+            let isMedComplete = medLogs.count >= expectedDoses.count
+            
+            if !isMedComplete {
+                allMedsCompleted = false
+                break
             }
         }
         
-        // Treatment is complete if:
-        // 1. All medications are past their end date
-        // 2. There is at least one logged dose (taken or skipped)
-        return allPastEndDate && hasAnyLogs
+        if allMedsCompleted {
+            return true
+        }
+        
+        // Fallback: Old time-based logic (if user didn't log everything but time passed? 
+        // Actually, if time passed but they didn't log, it's not "Completed" successfully.
+        // But let's keep the old check for "Expired" treatments if that was the intent, 
+        // OR just rely on the new logic which is stricter and more accurate for "Completion".
+        // The user's request implies they WANT it to be completed because they took the dose.
+        // So the new logic covers their case.
+        
+        // Let's keep the old logic as an OR condition? 
+        // "Completed" usually means "Done successfully". 
+        // If I missed a dose and the time ended, is it "Completed"? Maybe "Ended".
+        // For now, I will return the result of the strict check, as it fixes the reported bug.
+        
+        return false
     }
 }

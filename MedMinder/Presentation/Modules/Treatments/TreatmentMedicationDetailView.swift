@@ -39,6 +39,17 @@ struct TreatmentMedicationDetailView: View {
                                     .font(.subheadline)
                                     .foregroundColor(.textSecondary)
                             }
+                            
+                            if viewModel.isCompleted {
+                                Text("Completed")
+                                    .font(.caption)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color.gray)
+                                    .cornerRadius(8)
+                            }
                         }
                         
                         Spacer()

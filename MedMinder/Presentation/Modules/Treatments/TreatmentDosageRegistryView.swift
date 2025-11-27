@@ -9,6 +9,21 @@ struct TreatmentDosageRegistryView: View {
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
+                    if viewModel.isCompleted {
+                        HStack {
+                            Text("Completed")
+                                .font(.caption)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Color.gray)
+                                .cornerRadius(8)
+                            Spacer()
+                        }
+                        .padding(.horizontal)
+                    }
+                    
                     if viewModel.doseLogs.isEmpty {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("No doses recorded yet.")

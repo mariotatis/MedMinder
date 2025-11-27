@@ -13,6 +13,48 @@ class TreatmentDosageRegistryViewModel: ObservableObject {
         self.medicationUseCases = medicationUseCases
     }
     
+    @Published var isCompleted: Bool = false
+    
+    private func checkCompletion(medications: [Medication], doseLogs: [DoseLog]) {
+        var allMedsCompleted = true
+        
+        for med in medications {
+            // 1. Calculate expected doses
+            let durationDays = med.durationDays
+            let frequencyHours = med.frequencyHours
+            
+            if durationDays <= 0 || frequencyHours <= 0 {
+                allMedsCompleted = false
+                break
+            }
+            
+            let calendar = Calendar.current
+            let endDate = calendar.date(byAdding: .day, value: durationDays, to: med.initialTime) ?? Date()
+            let frequencySeconds = Double(frequencyHours) * 3600
+            
+            var expectedDoses: [Date] = []
+            var currentTime = med.initialTime
+            
+            // Generate all scheduled times
+            while currentTime <= endDate {
+                expectedDoses.append(currentTime)
+                currentTime += frequencySeconds
+            }
+            
+            // 2. Check if the number of logged doses (taken/skipped) matches or exceeds the expected count
+            let medLogs = doseLogs.filter { $0.medicationId == med.id && ($0.status == .taken || $0.status == .skipped) }
+            
+            let isMedComplete = medLogs.count >= expectedDoses.count
+            
+            if !isMedComplete {
+                allMedsCompleted = false
+                break
+            }
+        }
+        
+        self.isCompleted = allMedsCompleted
+    }
+    
     func fetchDoseLogs() {
         // Get all medications and dose logs
         Publishers.Zip(
@@ -84,6 +126,9 @@ class TreatmentDosageRegistryViewModel: ObservableObject {
             
             // Sort chronologically (oldest first, upcoming at bottom)
             self.doseLogs = logsWithMedication.sorted { $0.doseLog.scheduledTime < $1.doseLog.scheduledTime }
+            
+            // Check completion status
+            self.checkCompletion(medications: treatmentMedications, doseLogs: existingLogs)
         })
         .store(in: &cancellables)
     }

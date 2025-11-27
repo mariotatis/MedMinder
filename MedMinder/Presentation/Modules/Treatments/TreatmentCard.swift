@@ -17,16 +17,17 @@ struct TreatmentCard: View {
                         .fontWeight(.bold)
                         .foregroundColor(.textPrimary)
                     
-                    if isCompleted {
-                        Text("Completed")
-                            .font(.caption)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.gray)
-                            .cornerRadius(8)
-                    }
+                }
+                
+                if isCompleted {
+                    Text("Completed")
+                        .font(.caption)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.gray)
+                        .cornerRadius(8)
                 }
                 
                 if showProfileInfo {

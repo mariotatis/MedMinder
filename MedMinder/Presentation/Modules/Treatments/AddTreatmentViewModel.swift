@@ -88,26 +88,40 @@ class AddTreatmentViewModel: ObservableObject {
             (log.status == .taken || log.status == .skipped)
         }
         
-        // Check if all medications are past their end date
-        var allPastEndDate = true
+        // Complete if count of logged doses matches expected doses
+        // (Robust count-based logic)
+        var allMedsCompleted = true
         
         for med in medications {
             let durationDays = med.durationDays
             let frequencyHours = med.frequencyHours
             
             if durationDays <= 0 || frequencyHours <= 0 {
-                return false
+                allMedsCompleted = false
+                break
             }
             
-            let endDate = Calendar.current.date(byAdding: .day, value: durationDays, to: med.initialTime) ?? now
+            let calendar = Calendar.current
+            let endDate = calendar.date(byAdding: .day, value: durationDays, to: med.initialTime) ?? now
+            let frequencySeconds = Double(frequencyHours) * 3600
             
-            if now < endDate {
-                allPastEndDate = false
+            var expectedDoses: [Date] = []
+            var currentTime = med.initialTime
+            
+            while currentTime <= endDate {
+                expectedDoses.append(currentTime)
+                currentTime += frequencySeconds
+            }
+            
+            let medLogs = doseLogs.filter { $0.medicationId == med.id && ($0.status == .taken || $0.status == .skipped) }
+            
+            if medLogs.count < expectedDoses.count {
+                allMedsCompleted = false
+                break
             }
         }
         
-        // Complete if past end date and has logged activity
-        return allPastEndDate && !loggedDoses.isEmpty
+        return allMedsCompleted
     }
     
     private var originalMedicationIds: Set<UUID> = []
