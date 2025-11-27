@@ -28,6 +28,7 @@
 		A43A746B1A9873DEF5F45528 /* LocalRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B1A6EA577A5E1AE522516 /* LocalRepositories.swift */; };
 		AA0FFA7ADDCB84D31C4203F3 /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08377973F9951133FC385721 /* AppContainer.swift */; };
 		ACB605F3A9F720FEF650CDE6 /* AddProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7A7B4B328997BFC8F74093 /* AddProfileViewModel.swift */; };
+		ACD787B82ED7C1C000685EA1 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC4C8B032ED7B91600A2B292 /* Media.xcassets */; };
 		ACDF60C82ED56536003C4F41 /* TreatmentCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60C72ED56536003C4F41 /* TreatmentCard.swift */; };
 		ACDF60C92ED56536003C4F41 /* EditTreatmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60C62ED56536003C4F41 /* EditTreatmentView.swift */; };
 		ACDF60CC2ED5825A003C4F41 /* TreatmentMedicationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60CA2ED5825A003C4F41 /* TreatmentMedicationDetailView.swift */; };
@@ -35,7 +36,6 @@
 		ACDF60D02ED65DA0003C4F41 /* ProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60CE2ED65DA0003C4F41 /* ProfileDetailView.swift */; };
 		ACDF60D12ED65DA0003C4F41 /* ProfileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60CF2ED65DA0003C4F41 /* ProfileListView.swift */; };
 		ACDF60D32ED65DBE003C4F41 /* ProfileDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60D22ED65DBE003C4F41 /* ProfileDetailViewModel.swift */; };
-		ACFD9ACD2ECF9290003F6E66 /* ProfileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9ACB2ECF9290003F6E66 /* ProfileListView.swift */; };
 		ACFD9ACE2ECF9290003F6E66 /* ProfileListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9ACC2ECF9290003F6E66 /* ProfileListViewModel.swift */; };
 		ACFD9AD12ED048CB003F6E66 /* TreatmentDosageRegistryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9ACF2ED048CB003F6E66 /* TreatmentDosageRegistryView.swift */; };
 		ACFD9AD22ED048CB003F6E66 /* TreatmentDosageRegistryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9AD02ED048CB003F6E66 /* TreatmentDosageRegistryViewModel.swift */; };
@@ -71,6 +71,8 @@
 		8A5004A5B36156946217188F /* MedMinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MedMinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C4EB717574503CD8F8B3DBA /* MedicationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDetailView.swift; sourceTree = "<group>"; };
 		AA1297DEB3ACC7C991ED3106 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		AC4C8B032ED7B91600A2B292 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		ACD787B02ED7BF0200685EA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ACDF60C62ED56536003C4F41 /* EditTreatmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTreatmentView.swift; sourceTree = "<group>"; };
 		ACDF60C72ED56536003C4F41 /* TreatmentCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreatmentCard.swift; sourceTree = "<group>"; };
 		ACDF60CA2ED5825A003C4F41 /* TreatmentMedicationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreatmentMedicationDetailView.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				C23DF0D16BC1AB97D43E045A /* Data */,
 				38AF04E77AABC2EC30C986C6 /* Domain */,
 				1768B6BBF46DF223B162FD31 /* Presentation */,
+				ACD787B02ED7BF0200685EA1 /* Info.plist */,
 			);
 			path = MedMinder;
 			sourceTree = "<group>";
@@ -161,6 +164,7 @@
 		4E72D66C0427F8F52F2F56C1 = {
 			isa = PBXGroup;
 			children = (
+				AC4C8B032ED7B91600A2B292 /* Media.xcassets */,
 				2F9481100A2CAB8B1E64E5D4 /* MedMinder */,
 				D1AD861BE598037EC9E693B6 /* Products */,
 			);
@@ -298,6 +302,7 @@
 			buildConfigurationList = FE510DAA85F46F8DD0AF17EC /* Build configuration list for PBXNativeTarget "MedMinder" */;
 			buildPhases = (
 				CFBCC5D0F5AAC6DBF1D0A41D /* Sources */,
+				ACD787B72ED7C1B500685EA1 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -317,7 +322,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 2610;
 			};
 			buildConfigurationList = 764BE56735932CC10A861974 /* Build configuration list for PBXProject "MedMinder" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -337,6 +342,17 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		ACD787B72ED7C1B500685EA1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACD787B82ED7C1C000685EA1 /* Media.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		CFBCC5D0F5AAC6DBF1D0A41D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -345,7 +361,6 @@
 				ACDF60D02ED65DA0003C4F41 /* ProfileDetailView.swift in Sources */,
 				ACDF60D12ED65DA0003C4F41 /* ProfileListView.swift in Sources */,
 				F7ACA909D882ECE4793E11F6 /* AddMedicationView.swift in Sources */,
-				ACFD9ACD2ECF9290003F6E66 /* ProfileListView.swift in Sources */,
 				ACFD9ACE2ECF9290003F6E66 /* ProfileListViewModel.swift in Sources */,
 				F87B5FE14687F762A2EC9BAD /* AddMedicationViewModel.swift in Sources */,
 				98ACDEE10546B0D756E704D0 /* AddProfileView.swift in Sources */,
@@ -391,10 +406,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]" = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = DG44JXF5G2;
+				DEVELOPMENT_ASSET_PATHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -413,6 +431,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -444,8 +463,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = DG44JXF5G2;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -466,6 +487,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -476,10 +498,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]" = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = DG44JXF5G2;
+				DEVELOPMENT_ASSET_PATHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -498,6 +523,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -529,8 +555,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = DG44JXF5G2;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -544,6 +572,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
