@@ -10,6 +10,7 @@ class MedicationDetailViewModel: ObservableObject {
     @Published var showTimeChangeConfirmation: Bool = false
     @Published var isDoseLogged: Bool = false
     @Published var currentDoseLog: DoseLog?
+    @Published var selectedSegment: Int = 0 // 0 = Upcoming, 1 = History (default to Upcoming)
     
     private let medicationUseCases: MedicationUseCases
     private let treatmentUseCases: TreatmentUseCases
@@ -177,6 +178,10 @@ class MedicationDetailViewModel: ObservableObject {
         // Only consider it "future" if the scheduled time hasn't arrived yet
         // This allows marking any dose that is current or in the past
         return scheduledTime > Date()
+    }
+    
+    var missedDoseCount: Int {
+        doseLogs.filter { $0.status == .pending && $0.scheduledTime < Date() }.count
     }
     
     func markAsTaken() {

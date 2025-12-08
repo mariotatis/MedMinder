@@ -14,6 +14,7 @@ class TreatmentDosageRegistryViewModel: ObservableObject {
     }
     
     @Published var isCompleted: Bool = false
+    @Published var selectedSegment: Int = 0 // 0 = Upcoming, 1 = History (default to Upcoming)
     
     private func checkCompletion(medications: [Medication], doseLogs: [DoseLog]) {
         var allMedsCompleted = true
@@ -53,6 +54,10 @@ class TreatmentDosageRegistryViewModel: ObservableObject {
         }
         
         self.isCompleted = allMedsCompleted
+    }
+    
+    var missedDoseCount: Int {
+        doseLogs.filter { $0.doseLog.status == .pending && $0.doseLog.scheduledTime < Date() }.count
     }
     
     func fetchDoseLogs() {
