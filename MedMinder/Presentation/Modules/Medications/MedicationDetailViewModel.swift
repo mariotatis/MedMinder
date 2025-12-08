@@ -59,12 +59,71 @@ class MedicationDetailViewModel: ObservableObject {
         medicationUseCases.getDoseLogs()
             .map { logs in
                 logs.filter { $0.medicationId == self.medication.id }
-                    .sorted(by: { $0.scheduledTime > $1.scheduledTime })
             }
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] logs in
-                self?.doseLogs = logs
-                self?.checkIfDoseLogged()
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] existingLogs in
+                guard let self = self else { return }
+                
+                print("[MedicationDetail] Generating doses for medication: \(self.medication.name)")
+                
+                let calendar = Calendar.current
+                let now = Date()
+                
+                // Calculate end date
+                guard let endDate = calendar.date(byAdding: .day, value: self.medication.durationDays, to: self.medication.initialTime) else {
+                    self.doseLogs = existingLogs.sorted(by: { $0.scheduledTime > $1.scheduledTime })
+                    self.checkIfDoseLogged()
+                    return
+                }
+                
+                // Generate all expected dose times from initial time to end date
+                var allExpectedDoses: [DoseLog] = []
+                var currentTime = self.medication.initialTime
+                let frequencyInterval = TimeInterval(self.medication.frequencyHours * 3600)
+                
+                var totalExpected = 0
+                var foundExisting = 0
+                var missedCount = 0
+                
+                while currentTime <= endDate {
+                    totalExpected += 1
+                    
+                    // Check if a log exists for this scheduled time
+                    if let existingLog = existingLogs.first(where: { log in
+                        calendar.isDate(log.scheduledTime, equalTo: currentTime, toGranularity: .minute)
+                    }) {
+                        print("[MedicationDetail] Found existing log for: \(currentTime)")
+                        allExpectedDoses.append(existingLog)
+                        foundExisting += 1
+                    } else {
+                        // No log exists - create a pending entry (missed or upcoming)
+                        let isPast = currentTime < now
+                        if isPast {
+                            print("[MedicationDetail] No log found for: \(currentTime) (missed dose)")
+                            missedCount += 1
+                        }
+                        
+                        let pendingLog = DoseLog(
+                            medicationId: self.medication.id,
+                            scheduledTime: currentTime,
+                            takenTime: nil,
+                            status: .pending
+                        )
+                        allExpectedDoses.append(pendingLog)
+                    }
+                    
+                    currentTime = currentTime.addingTimeInterval(frequencyInterval)
+                }
+                
+                print("[MedicationDetail] Total doses: \(totalExpected), Logged: \(foundExisting), Missed: \(missedCount)")
+                
+                // Filter to show only past/current doses (not future upcoming doses)
+                // We only want to show doses up to "now" in the Dosage Registry section
+                let pastDoses = allExpectedDoses.filter { $0.scheduledTime <= now }
+                
+                // Sort by most recent first
+                self.doseLogs = pastDoses.sorted(by: { $0.scheduledTime > $1.scheduledTime })
+                self.checkIfDoseLogged()
             })
             .store(in: &cancellables)
     }
@@ -74,7 +133,8 @@ class MedicationDetailViewModel: ObservableObject {
         currentDoseLog = doseLogs.first(where: { log in
             calendar.isDate(log.scheduledTime, equalTo: originalScheduledTime, toGranularity: .minute)
         })
-        isDoseLogged = currentDoseLog != nil
+        // Only consider it logged if it's been marked as taken or skipped (not pending)
+        isDoseLogged = currentDoseLog?.status == .taken || currentDoseLog?.status == .skipped
     }
     
     func calculateUpcomingDoses() {
@@ -114,9 +174,9 @@ class MedicationDetailViewModel: ObservableObject {
     }
     
     var isFutureDose: Bool {
-        // Consider it "future" only if it's more than 20 minutes away
-        // If it's within 20 mins, we treat it as "due" (so buttons appear)
-        return scheduledTime > Date().addingTimeInterval(20 * 60)
+        // Only consider it "future" if the scheduled time hasn't arrived yet
+        // This allows marking any dose that is current or in the past
+        return scheduledTime > Date()
     }
     
     func markAsTaken() {
@@ -178,5 +238,39 @@ class MedicationDetailViewModel: ObservableObject {
                 self?.medication = updatedMedication
             })
             .eraseToAnyPublisher()
+    }
+    
+    // MARK: - Mark Specific Doses
+    
+    func markDoseAsTaken(scheduledTime: Date) {
+        let log = DoseLog(
+            medicationId: medication.id,
+            scheduledTime: scheduledTime,
+            takenTime: Date(),
+            status: .taken
+        )
+        
+        medicationUseCases.logDose(log)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
+                self?.fetchDoseHistory()
+            })
+            .store(in: &cancellables)
+    }
+    
+    func markDoseAsSkipped(scheduledTime: Date) {
+        let log = DoseLog(
+            medicationId: medication.id,
+            scheduledTime: scheduledTime,
+            takenTime: nil,
+            status: .skipped
+        )
+        
+        medicationUseCases.logDose(log)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
+                self?.fetchDoseHistory()
+            })
+            .store(in: &cancellables)
     }
 }

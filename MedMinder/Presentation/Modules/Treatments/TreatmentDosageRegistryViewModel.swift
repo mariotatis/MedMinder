@@ -83,37 +83,56 @@ class TreatmentDosageRegistryViewModel: ObservableObject {
             let now = Date()
             let calendar = Calendar.current
             
+            
             for medication in treatmentMedications {
+                print("[TreatmentDosageRegistry] Generating doses for medication: \(medication.name)")
+                
                 // Calculate end date
                 let endDate = calendar.date(byAdding: .day, value: medication.durationDays, to: medication.initialTime) ?? now
                 
-                // Only generate upcoming doses if medication hasn't ended
-                if now < endDate {
-                    // Get existing scheduled times for this medication
-                    let existingScheduledTimes = Set(existingLogs
-                        .filter { $0.medicationId == medication.id }
-                        .map { calendar.startOfDay(for: $0.scheduledTime).addingTimeInterval($0.scheduledTime.timeIntervalSince(calendar.startOfDay(for: $0.scheduledTime))) }
-                    )
-                    
-                    // Generate doses from now until end date
-                    var currentTime = medication.initialTime
-                    let frequencyInterval = TimeInterval(medication.frequencyHours * 3600)
-                    
-                    while currentTime <= endDate {
-                        // Only create if this scheduled time doesn't already have a log
-                        if !existingScheduledTimes.contains(currentTime) && currentTime >= now {
-                            let upcomingDose = DoseLog(
-                                id: UUID(),
-                                medicationId: medication.id,
-                                scheduledTime: currentTime,
-                                takenTime: nil,
-                                status: .pending
-                            )
-                            allDoses.append(upcomingDose)
-                        }
-                        currentTime = currentTime.addingTimeInterval(frequencyInterval)
+                // Get existing scheduled times for this medication
+                let existingScheduledTimes = Set(existingLogs
+                    .filter { $0.medicationId == medication.id }
+                    .map { log in
+                        // Normalize to minute precision for comparison
+                        calendar.date(from: calendar.dateComponents([.year, .month, .day, .hour, .minute], from: log.scheduledTime))!
                     }
+                )
+                
+                // Generate ALL doses from initial time to end date (including past missed doses)
+                var currentTime = medication.initialTime
+                let frequencyInterval = TimeInterval(medication.frequencyHours * 3600)
+                
+                var expectedCount = 0
+                var missedCount = 0
+                
+                while currentTime <= endDate {
+                    expectedCount += 1
+                    
+                    // Normalize current time for comparison
+                    let normalizedCurrentTime = calendar.date(from: calendar.dateComponents([.year, .month, .day, .hour, .minute], from: currentTime))!
+                    
+                    // Only create if this scheduled time doesn't already have a log
+                    if !existingScheduledTimes.contains(normalizedCurrentTime) {
+                        let isPast = currentTime < now
+                        if isPast {
+                            missedCount += 1
+                            print("[TreatmentDosageRegistry] Missed dose at: \(currentTime)")
+                        }
+                        
+                        let pendingDose = DoseLog(
+                            id: UUID(),
+                            medicationId: medication.id,
+                            scheduledTime: currentTime,
+                            takenTime: nil,
+                            status: .pending
+                        )
+                        allDoses.append(pendingDose)
+                    }
+                    currentTime = currentTime.addingTimeInterval(frequencyInterval)
                 }
+                
+                print("[TreatmentDosageRegistry] Expected: \(expectedCount), Missed: \(missedCount)")
             }
             
             // Combine logs with medication info
@@ -131,6 +150,40 @@ class TreatmentDosageRegistryViewModel: ObservableObject {
             self.checkCompletion(medications: treatmentMedications, doseLogs: existingLogs)
         })
         .store(in: &cancellables)
+    }
+    
+    // MARK: - Mark Specific Doses
+    
+    func markDoseAsTaken(medicationId: UUID, scheduledTime: Date) {
+        let log = DoseLog(
+            medicationId: medicationId,
+            scheduledTime: scheduledTime,
+            takenTime: Date(),
+            status: .taken
+        )
+        
+        medicationUseCases.logDose(log)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
+                self?.fetchDoseLogs()
+            })
+            .store(in: &cancellables)
+    }
+    
+    func markDoseAsSkipped(medicationId: UUID, scheduledTime: Date) {
+        let log = DoseLog(
+            medicationId: medicationId,
+            scheduledTime: scheduledTime,
+            takenTime: nil,
+            status: .skipped
+        )
+        
+        medicationUseCases.logDose(log)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
+                self?.fetchDoseLogs()
+            })
+            .store(in: &cancellables)
     }
 }
 

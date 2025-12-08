@@ -136,43 +136,92 @@ struct MedicationDetailView: View {
                             }
                         } else {
                             ForEach(viewModel.doseLogs) { log in
-                                HStack {
-                                    if log.status == .taken {
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .foregroundColor(.green)
-                                    } else if log.status == .skipped {
-                                        Image(systemName: "exclamationmark.circle.fill")
-                                            .foregroundColor(.orange)
-                                    } else {
-                                        Image(systemName: "clock")
-                                            .foregroundColor(.textSecondary)
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack {
+                                        if log.status == .taken {
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .foregroundColor(.green)
+                                        } else if log.status == .skipped {
+                                            Image(systemName: "exclamationmark.circle.fill")
+                                                .foregroundColor(.orange)
+                                        } else {
+                                            // Pending - red for missed, grey for upcoming
+                                            Image(systemName: "clock")
+                                                .foregroundColor(log.scheduledTime < Date() ? .red : .gray)
+                                        }
+                                        
+                                        VStack(alignment: .leading) {
+                                            if let takenTime = log.takenTime {
+                                                Text("Taken at \(takenTime, style: .time)")
+                                                    .font(.body)
+                                                    .foregroundColor(.textPrimary)
+                                                Text(takenTime, style: .date)
+                                                    .font(.caption)
+                                                    .foregroundColor(.textSecondary)
+                                            } else if log.status == .skipped {
+                                                Text("Skipped dose at \(log.scheduledTime, style: .time)")
+                                                    .font(.body)
+                                                    .foregroundColor(.orange)
+                                                Text(log.scheduledTime, style: .date)
+                                                    .font(.caption)
+                                                    .foregroundColor(.textSecondary)
+                                            } else {
+                                                // Pending dose - check if missed (past) or upcoming (future)
+                                                if log.scheduledTime < Date() {
+                                                    // Missed dose
+                                                    HStack(spacing: 4) {
+                                                        Text("Missed:")
+                                                            .font(.body)
+                                                            .fontWeight(.semibold)
+                                                            .foregroundColor(.red)
+                                                        Text("\(log.scheduledTime, style: .time)")
+                                                            .font(.body)
+                                                            .foregroundColor(.textPrimary)
+                                                    }
+                                                } else {
+                                                    // Upcoming dose
+                                                    Text("Scheduled for \(log.scheduledTime, style: .time)")
+                                                        .font(.body)
+                                                        .foregroundColor(.textPrimary)
+                                                }
+                                                Text(log.scheduledTime, style: .date)
+                                                    .font(.caption)
+                                                    .foregroundColor(.textSecondary)
+                                            }
+                                        }
+                                        Spacer()
                                     }
                                     
-                                    VStack(alignment: .leading) {
-                                        if let takenTime = log.takenTime {
-                                            Text("Taken at \(takenTime, style: .time)")
-                                                .font(.body)
-                                                .foregroundColor(.textPrimary)
-                                            Text(takenTime, style: .date)
-                                                .font(.caption)
-                                                .foregroundColor(.textSecondary)
-                                        } else if log.status == .skipped {
-                                            Text("Skipped dose at \(log.scheduledTime, style: .time)")
-                                                .font(.body)
-                                                .foregroundColor(.orange)
-                                            Text(log.scheduledTime, style: .date)
-                                                .font(.caption)
-                                                .foregroundColor(.textSecondary)
-                                        } else {
-                                            Text("Scheduled: \(log.scheduledTime, style: .time)")
-                                                .font(.body)
-                                                .foregroundColor(.textPrimary)
-                                            Text(log.scheduledTime, style: .date)
-                                                .font(.caption)
-                                                .foregroundColor(.textSecondary)
+                                    // Action buttons for missed doses (only show for past doses)
+                                    if log.status == .pending && log.scheduledTime < Date() {
+                                        HStack(spacing: 8) {
+                                            Button(action: {
+                                                viewModel.markDoseAsTaken(scheduledTime: log.scheduledTime)
+                                            }) {
+                                                Text("Mark as Taken")
+                                                    .font(.caption)
+                                                    .fontWeight(.medium)
+                                                    .foregroundColor(.white)
+                                                    .padding(.horizontal, 12)
+                                                    .padding(.vertical, 6)
+                                                    .background(Color.green)
+                                                    .cornerRadius(8)
+                                            }
+                                            
+                                            Button(action: {
+                                                viewModel.markDoseAsSkipped(scheduledTime: log.scheduledTime)
+                                            }) {
+                                                Text("Mark as Skipped")
+                                                    .font(.caption)
+                                                    .fontWeight(.medium)
+                                                    .foregroundColor(.white)
+                                                    .padding(.horizontal, 12)
+                                                    .padding(.vertical, 6)
+                                                    .background(Color.orange)
+                                                    .cornerRadius(8)
+                                            }
                                         }
                                     }
-                                    Spacer()
                                 }
                                 .padding()
                                 .background(Color.surface)

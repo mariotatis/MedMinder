@@ -32,7 +32,7 @@ struct MedicationCard: View {
                 
                 if let treatmentName = treatmentName {
                     Text(treatmentName)
-                        .font(.caption)
+                        .font(.subheadline)
                         .foregroundColor(.textSecondary.opacity(0.8))
                 }
                 

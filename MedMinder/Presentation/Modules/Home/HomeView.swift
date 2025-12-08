@@ -4,6 +4,7 @@ struct HomeView: View {
     @StateObject var viewModel: HomeViewModel
     
     @State private var showAddTreatment = false
+    @State private var showFilterPopover = false
     
     var body: some View {
         NavigationView {
@@ -133,6 +134,30 @@ struct HomeView: View {
             }
             .navigationTitle(greeting)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showFilterPopover = true
+                    }) {
+                        Image(systemName: viewModel.selectedProfileId == nil ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                            .foregroundColor(viewModel.selectedProfileId == nil ? .textSecondary : .primaryAction)
+                    }
+                    .popover(isPresented: $showFilterPopover) {
+                        ProfileFilterView(
+                            profiles: viewModel.availableProfiles,
+                            selectedProfileId: viewModel.selectedProfileId,
+                            onSelect: { profileId in
+                                if let profileId = profileId {
+                                    viewModel.setFilter(profileId: profileId)
+                                } else {
+                                    viewModel.clearFilter()
+                                }
+                            }
+                        )
+                        .presentationCompactAdaptation(.popover)
+                    }
+                }
+            }
             .sheet(isPresented: $showAddTreatment) {
                 NavigationView {
                     AddTreatmentView(viewModel: AddTreatmentViewModel(

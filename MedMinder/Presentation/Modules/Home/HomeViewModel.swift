@@ -6,6 +6,8 @@ class HomeViewModel: ObservableObject {
     @Published var tomorrowSections: [HomeSection] = []
     @Published var todayDateString: String = ""
     @Published var tomorrowDateString: String = ""
+    @Published var selectedProfileId: UUID?
+    @Published var availableProfiles: [Profile] = []
     
     // Remove old sections property if not needed, or keep for compatibility but we will use specific ones
     // @Published var sections: [HomeSection] = [] // Removing this to force UI update
@@ -50,6 +52,9 @@ class HomeViewModel: ObservableObject {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
+        
+        // Populate available profiles
+        self.availableProfiles = profiles.sorted { $0.name < $1.name }
         
         // Date Strings
         self.todayDateString = "Today, \(formatDate(today))"
@@ -149,7 +154,16 @@ class HomeViewModel: ObservableObject {
                 }
             }
         }
-        return doses.sorted(by: { $0.scheduledTime < $1.scheduledTime })
+        
+        // Apply profile filter if set
+        var filteredDoses = doses
+        if let selectedProfileId = selectedProfileId {
+            filteredDoses = doses.filter { dose in
+                dose.profile?.id == selectedProfileId
+            }
+        }
+        
+        return filteredDoses.sorted(by: { $0.scheduledTime < $1.scheduledTime })
     }
     
     private func groupDosesByTime(doses: [MedicationDose]) -> [HomeSection] {
@@ -205,22 +219,22 @@ class HomeViewModel: ObservableObject {
             }
             
             if !earlyMorning.isEmpty {
-                sections.append(HomeSection(title: "Early Morning", doses: earlyMorning, isCurrent: currentPeriod == "Early Morning"))
+                sections.append(HomeSection(title: "🌥️ Early Morning", doses: earlyMorning, isCurrent: currentPeriod == "Early Morning"))
             }
             if !morning.isEmpty {
-                sections.append(HomeSection(title: "Morning", doses: morning, isCurrent: currentPeriod == "Morning"))
+                sections.append(HomeSection(title: "☀️ Morning", doses: morning, isCurrent: currentPeriod == "Morning"))
             }
             if !afternoon.isEmpty {
-                sections.append(HomeSection(title: "Afternoon", doses: afternoon, isCurrent: currentPeriod == "Afternoon"))
+                sections.append(HomeSection(title: "🌤️ Afternoon", doses: afternoon, isCurrent: currentPeriod == "Afternoon"))
             }
             if !lateEvening.isEmpty {
-                sections.append(HomeSection(title: "Evening", doses: lateEvening, isCurrent: currentPeriod == "Evening"))
+                sections.append(HomeSection(title: "🌙 Evening", doses: lateEvening, isCurrent: currentPeriod == "Evening"))
             }
         } else {
             // Normal order
-            if !morning.isEmpty { sections.append(HomeSection(title: "Morning", doses: morning, isCurrent: currentPeriod == "Morning")) }
-            if !afternoon.isEmpty { sections.append(HomeSection(title: "Afternoon", doses: afternoon, isCurrent: currentPeriod == "Afternoon")) }
-            if !evening.isEmpty { sections.append(HomeSection(title: "Evening", doses: evening, isCurrent: currentPeriod == "Evening")) }
+            if !morning.isEmpty { sections.append(HomeSection(title: "☀️ Morning", doses: morning, isCurrent: currentPeriod == "Morning")) }
+            if !afternoon.isEmpty { sections.append(HomeSection(title: "🌤️ Afternoon", doses: afternoon, isCurrent: currentPeriod == "Afternoon")) }
+            if !evening.isEmpty { sections.append(HomeSection(title: "🌙 Evening", doses: evening, isCurrent: currentPeriod == "Evening")) }
         }
         
         return sections
@@ -229,6 +243,16 @@ class HomeViewModel: ObservableObject {
     func getProfile(for medication: Medication) -> Profile? {
         // Helper if needed, but now embedded in MedicationDose
         return nil
+    }
+    
+    func setFilter(profileId: UUID?) {
+        self.selectedProfileId = profileId
+        generateSections()
+    }
+    
+    func clearFilter() {
+        self.selectedProfileId = nil
+        generateSections()
     }
 }
 

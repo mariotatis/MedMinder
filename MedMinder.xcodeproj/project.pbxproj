@@ -39,6 +39,7 @@
 		ACDF60D02ED65DA0003C4F41 /* ProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60CE2ED65DA0003C4F41 /* ProfileDetailView.swift */; };
 		ACDF60D12ED65DA0003C4F41 /* ProfileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60CF2ED65DA0003C4F41 /* ProfileListView.swift */; };
 		ACDF60D32ED65DBE003C4F41 /* ProfileDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60D22ED65DBE003C4F41 /* ProfileDetailViewModel.swift */; };
+		ACF510E62EDF93F000B25ACD /* ProfileFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF510E52EDF93F000B25ACD /* ProfileFilterView.swift */; };
 		ACFD9ACE2ECF9290003F6E66 /* ProfileListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9ACC2ECF9290003F6E66 /* ProfileListViewModel.swift */; };
 		ACFD9AD12ED048CB003F6E66 /* TreatmentDosageRegistryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9ACF2ED048CB003F6E66 /* TreatmentDosageRegistryView.swift */; };
 		ACFD9AD22ED048CB003F6E66 /* TreatmentDosageRegistryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9AD02ED048CB003F6E66 /* TreatmentDosageRegistryViewModel.swift */; };
@@ -86,6 +87,7 @@
 		ACDF60CE2ED65DA0003C4F41 /* ProfileDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailView.swift; sourceTree = "<group>"; };
 		ACDF60CF2ED65DA0003C4F41 /* ProfileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListView.swift; sourceTree = "<group>"; };
 		ACDF60D22ED65DBE003C4F41 /* ProfileDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailViewModel.swift; sourceTree = "<group>"; };
+		ACF510E52EDF93F000B25ACD /* ProfileFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFilterView.swift; sourceTree = "<group>"; };
 		ACFD9ACB2ECF9290003F6E66 /* ProfileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListView.swift; sourceTree = "<group>"; };
 		ACFD9ACC2ECF9290003F6E66 /* ProfileListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListViewModel.swift; sourceTree = "<group>"; };
 		ACFD9ACF2ED048CB003F6E66 /* TreatmentDosageRegistryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreatmentDosageRegistryView.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 				47D85E44D88B6E8E13554CB3 /* MedicationCard.swift */,
 				ACFD9AD42ED0B175003F6E66 /* ImagePicker.swift */,
 				ACFD9AD52ED0B175003F6E66 /* ProfileAvatar.swift */,
+				ACF510E52EDF93F000B25ACD /* ProfileFilterView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -393,6 +396,7 @@
 			files = (
 				ACDF60D02ED65DA0003C4F41 /* ProfileDetailView.swift in Sources */,
 				ACDF60D12ED65DA0003C4F41 /* ProfileListView.swift in Sources */,
+				ACF510E62EDF93F000B25ACD /* ProfileFilterView.swift in Sources */,
 				F7ACA909D882ECE4793E11F6 /* AddMedicationView.swift in Sources */,
 				ACFD9ACE2ECF9290003F6E66 /* ProfileListViewModel.swift in Sources */,
 				F87B5FE14687F762A2EC9BAD /* AddMedicationViewModel.swift in Sources */,
