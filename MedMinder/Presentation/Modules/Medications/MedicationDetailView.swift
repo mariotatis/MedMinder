@@ -98,12 +98,54 @@ struct MedicationDetailView: View {
                     
                     // Segmented Control and Doses
                     VStack(alignment: .leading, spacing: 16) {
-                        // Segmented Control
-                        Picker("", selection: $viewModel.selectedSegment) {
-                            Text("Upcoming").tag(0)
-                            Text(viewModel.missedDoseCount > 0 ? "History (\(viewModel.missedDoseCount))" : "History").tag(1)
+                        // Custom Segmented Control with Badge
+                        HStack(spacing: 0) {
+                            // Upcoming Segment
+                            Button(action: {
+                                viewModel.selectedSegment = 0
+                            }) {
+                                Text("Upcoming")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(viewModel.selectedSegment == 0 ? .white : .primary)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 8)
+                                    .background(viewModel.selectedSegment == 0 ? Color.accentColor : Color.clear)
+                                    .cornerRadius(8)
+                            }
+                            
+                            // History Segment with Badge
+                            Button(action: {
+                                viewModel.selectedSegment = 1
+                            }) {
+                                HStack(spacing: 4) {
+                                    Text("History")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                    
+                                    if viewModel.missedDoseCount > 0 {
+                                        ZStack {
+                                            Circle()
+                                                .fill(Color.red)
+                                                .frame(width: 20, height: 20)
+                                            
+                                            Text("\(viewModel.missedDoseCount)")
+                                                .font(.caption2)
+                                                .fontWeight(.bold)
+                                                .foregroundColor(.white)
+                                        }
+                                    }
+                                }
+                                .foregroundColor(viewModel.selectedSegment == 1 ? .white : .primary)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                                .background(viewModel.selectedSegment == 1 ? Color.accentColor : Color.clear)
+                                .cornerRadius(8)
+                            }
                         }
-                        .pickerStyle(SegmentedPickerStyle())
+                        .padding(4)
+                        .background(Color.gray.opacity(0.15))
+                        .cornerRadius(10)
                         
                         // Content based on selected segment
                         if viewModel.selectedSegment == 0 {

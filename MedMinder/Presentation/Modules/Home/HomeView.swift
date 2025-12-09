@@ -1,10 +1,12 @@
 import SwiftUI
+import Combine
 
 struct HomeView: View {
     @StateObject var viewModel: HomeViewModel
     
     @State private var showAddTreatment = false
     @State private var showFilterPopover = false
+    @State private var cancellables = Set<AnyCancellable>()
     
     var body: some View {
         NavigationView {
@@ -60,24 +62,72 @@ struct HomeView: View {
                                             .padding(.horizontal)
                                         
                                         ForEach(section.doses) { dose in
-                                            NavigationLink(destination: MedicationDetailView(
-                                                viewModel: MedicationDetailViewModel(
-                                                    medication: dose.medication,
-                                                    scheduledTime: dose.scheduledTime,
-                                                    medicationUseCases: viewModel.medicationUseCases,
-                                                    treatmentUseCases: viewModel.treatmentUseCases,
-                                                    profileUseCases: viewModel.profileUseCases
-                                                )
-                                            )) {
-                                                MedicationCard(
-                                                    medication: dose.medication,
-                                                    profile: dose.profile,
-                                                    time: dose.scheduledTime,
-                                                    isCurrentPeriod: section.isCurrent,
-                                                    treatmentName: dose.treatmentName
-                                                )
+                                            if dose.isWithinActionWindow {
+                                                // Show card with action buttons (no navigation)
+                                                VStack(spacing: 0) {
+                                                    MedicationCard(
+                                                        medication: dose.medication,
+                                                        profile: dose.profile,
+                                                        time: dose.scheduledTime,
+                                                        isCurrentPeriod: section.isCurrent,
+                                                        treatmentName: dose.treatmentName
+                                                    )
+                                                    
+                                                    // Action buttons
+                                                    HStack(spacing: 12) {
+                                                        Button(action: {
+                                                            markDoseAsTaken(dose: dose)
+                                                        }) {
+                                                            Text("Mark as Taken")
+                                                                .font(.subheadline)
+                                                                .fontWeight(.medium)
+                                                                .foregroundColor(.white)
+                                                                .frame(maxWidth: .infinity)
+                                                                .padding(.vertical, 12)
+                                                                .background(Color.green)
+                                                                .cornerRadius(10)
+                                                        }
+                                                        
+                                                        Button(action: {
+                                                            markDoseAsSkipped(dose: dose)
+                                                        }) {
+                                                            Text("Mark as Skipped")
+                                                                .font(.subheadline)
+                                                                .fontWeight(.medium)
+                                                                .foregroundColor(.white)
+                                                                .frame(maxWidth: .infinity)
+                                                                .padding(.vertical, 12)
+                                                                .background(Color.orange)
+                                                                .cornerRadius(10)
+                                                        }
+                                                    }
+                                                    .padding(.horizontal)
+                                                    .padding(.bottom, 12)
+                                                    .background(section.isCurrent ? Color.blue.opacity(0.1) : Color.surface)
+                                                }
+                                                .cornerRadius(16)
+                                                .padding(.horizontal)
+                                            } else {
+                                                // Show as NavigationLink (normal behavior)
+                                                NavigationLink(destination: MedicationDetailView(
+                                                    viewModel: MedicationDetailViewModel(
+                                                        medication: dose.medication,
+                                                        scheduledTime: dose.scheduledTime,
+                                                        medicationUseCases: viewModel.medicationUseCases,
+                                                        treatmentUseCases: viewModel.treatmentUseCases,
+                                                        profileUseCases: viewModel.profileUseCases
+                                                    )
+                                                )) {
+                                                    MedicationCard(
+                                                        medication: dose.medication,
+                                                        profile: dose.profile,
+                                                        time: dose.scheduledTime,
+                                                        isCurrentPeriod: section.isCurrent,
+                                                        treatmentName: dose.treatmentName
+                                                    )
+                                                }
+                                                .padding(.horizontal)
                                             }
-                                            .padding(.horizontal)
                                         }
                                     }
                                 }
@@ -105,24 +155,72 @@ struct HomeView: View {
                                             .padding(.horizontal)
                                         
                                         ForEach(section.doses) { dose in
-                                            NavigationLink(destination: MedicationDetailView(
-                                                viewModel: MedicationDetailViewModel(
-                                                    medication: dose.medication,
-                                                    scheduledTime: dose.scheduledTime,
-                                                    medicationUseCases: viewModel.medicationUseCases,
-                                                    treatmentUseCases: viewModel.treatmentUseCases,
-                                                    profileUseCases: viewModel.profileUseCases
-                                                )
-                                            )) {
-                                                MedicationCard(
-                                                    medication: dose.medication,
-                                                    profile: dose.profile,
-                                                    time: dose.scheduledTime,
-                                                    isCurrentPeriod: false,
-                                                    treatmentName: dose.treatmentName
-                                                )
+                                            if dose.isWithinActionWindow {
+                                                // Show card with action buttons (no navigation)
+                                                VStack(spacing: 0) {
+                                                    MedicationCard(
+                                                        medication: dose.medication,
+                                                        profile: dose.profile,
+                                                        time: dose.scheduledTime,
+                                                        isCurrentPeriod: false,
+                                                        treatmentName: dose.treatmentName
+                                                    )
+                                                    
+                                                    // Action buttons
+                                                    HStack(spacing: 12) {
+                                                        Button(action: {
+                                                            markDoseAsTaken(dose: dose)
+                                                        }) {
+                                                            Text("Mark as Taken")
+                                                                .font(.subheadline)
+                                                                .fontWeight(.medium)
+                                                                .foregroundColor(.white)
+                                                                .frame(maxWidth: .infinity)
+                                                                .padding(.vertical, 12)
+                                                                .background(Color.green)
+                                                                .cornerRadius(10)
+                                                        }
+                                                        
+                                                        Button(action: {
+                                                            markDoseAsSkipped(dose: dose)
+                                                        }) {
+                                                            Text("Mark as Skipped")
+                                                                .font(.subheadline)
+                                                                .fontWeight(.medium)
+                                                                .foregroundColor(.white)
+                                                                .frame(maxWidth: .infinity)
+                                                                .padding(.vertical, 12)
+                                                                .background(Color.orange)
+                                                                .cornerRadius(10)
+                                                        }
+                                                    }
+                                                    .padding(.horizontal)
+                                                    .padding(.bottom, 12)
+                                                    .background(Color.surface)
+                                                }
+                                                .cornerRadius(16)
+                                                .padding(.horizontal)
+                                            } else {
+                                                // Show as NavigationLink (normal behavior)
+                                                NavigationLink(destination: MedicationDetailView(
+                                                    viewModel: MedicationDetailViewModel(
+                                                        medication: dose.medication,
+                                                        scheduledTime: dose.scheduledTime,
+                                                        medicationUseCases: viewModel.medicationUseCases,
+                                                        treatmentUseCases: viewModel.treatmentUseCases,
+                                                        profileUseCases: viewModel.profileUseCases
+                                                    )
+                                                )) {
+                                                    MedicationCard(
+                                                        medication: dose.medication,
+                                                        profile: dose.profile,
+                                                        time: dose.scheduledTime,
+                                                        isCurrentPeriod: false,
+                                                        treatmentName: dose.treatmentName
+                                                    )
+                                                }
+                                                .padding(.horizontal)
                                             }
-                                            .padding(.horizontal)
                                         }
                                     }
                                 }
@@ -185,5 +283,38 @@ struct HomeView: View {
         case 12..<17: return "Good afternoon"
         default: return "Good evening"
         }
+    }
+    
+    // Helper methods for marking doses
+    private func markDoseAsTaken(dose: MedicationDose) {
+        let log = DoseLog(
+            medicationId: dose.medication.id,
+            scheduledTime: dose.scheduledTime,
+            takenTime: Date(),
+            status: .taken
+        )
+        
+        viewModel.medicationUseCases.logDose(log)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { [viewModel] _ in
+                viewModel.fetchData()
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func markDoseAsSkipped(dose: MedicationDose) {
+        let log = DoseLog(
+            medicationId: dose.medication.id,
+            scheduledTime: dose.scheduledTime,
+            takenTime: nil,
+            status: .skipped
+        )
+        
+        viewModel.medicationUseCases.logDose(log)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { [viewModel] _ in
+                viewModel.fetchData()
+            })
+            .store(in: &cancellables)
     }
 }

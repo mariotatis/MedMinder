@@ -63,79 +63,145 @@ struct TreatmentMedicationDetailView: View {
                     .background(Color.surface)
                     .cornerRadius(16)
                     
-                    // Upcoming Doses Section
-                    if !viewModel.upcomingDoses.isEmpty {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Upcoming Doses")
-                                .font(.title3)
-                                .fontWeight(.bold)
-                                .foregroundColor(.textPrimary)
+                    // Custom Segmented Control with Badge
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack(spacing: 0) {
+                            // Upcoming Segment
+                            Button(action: {
+                                viewModel.selectedSegment = 0
+                            }) {
+                                Text("Upcoming")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(viewModel.selectedSegment == 0 ? .white : .primary)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 8)
+                                    .background(viewModel.selectedSegment == 0 ? Color.accentColor : Color.clear)
+                                    .cornerRadius(8)
+                            }
                             
-                            ForEach(viewModel.upcomingDoses, id: \.self) { date in
-                                HStack {
-                                    Image(systemName: "clock")
-                                        .foregroundColor(.gray)
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text(date, style: .time)
-                                            .font(.body)
-                                            .foregroundColor(.textPrimary)
-                                        Text(date, style: .date)
-                                            .font(.subheadline)
-                                            .foregroundColor(.textSecondary)
+                            // History Segment with Badge
+                            Button(action: {
+                                viewModel.selectedSegment = 1
+                            }) {
+                                HStack(spacing: 4) {
+                                    Text("History")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                    
+                                    if viewModel.missedDoseCount > 0 {
+                                        ZStack {
+                                            Circle()
+                                                .fill(Color.red)
+                                                .frame(width: 20, height: 20)
+                                            
+                                            Text("\(viewModel.missedDoseCount)")
+                                                .font(.caption2)
+                                                .fontWeight(.bold)
+                                                .foregroundColor(.white)
+                                        }
                                     }
-                                    Spacer()
                                 }
-                                .padding()
-                                .background(Color.surface)
-                                .cornerRadius(12)
+                                .foregroundColor(viewModel.selectedSegment == 1 ? .white : .primary)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                                .background(viewModel.selectedSegment == 1 ? Color.accentColor : Color.clear)
+                                .cornerRadius(8)
                             }
                         }
-                    }
-                    
-                    // Dosage History Section
-                    if !viewModel.doseHistory.isEmpty {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Dosage History")
-                                .font(.title3)
-                                .fontWeight(.bold)
-                                .foregroundColor(.textPrimary)
-                            
-                            ForEach(viewModel.doseHistory) { log in
-                                HStack(alignment: .top, spacing: 12) {
-                                    // Status Icon
-                                    if log.status == .taken {
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .font(.title2)
-                                            .foregroundColor(.green)
-                                    } else if log.status == .skipped {
-                                        Image(systemName: "exclamationmark.circle.fill")
-                                            .font(.title2)
-                                            .foregroundColor(.orange)
-                                    }
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        // Status and Time
-                                        if let takenTime = log.takenTime {
-                                            Text("Taken at \(takenTime, style: .time)")
+                        .padding(4)
+                        .background(Color.gray.opacity(0.15))
+                        .cornerRadius(10)
+                        
+                        // Content based on selected segment
+                        if viewModel.selectedSegment == 0 {
+                            // Upcoming Doses
+                            if viewModel.upcomingDoses.isEmpty {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("No upcoming doses.")
+                                        .foregroundColor(.textSecondary)
+                                }
+                            } else {
+                                ForEach(viewModel.upcomingDoses, id: \.self) { date in
+                                    HStack {
+                                        Image(systemName: "clock")
+                                            .foregroundColor(.gray)
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text(date, style: .time)
                                                 .font(.body)
                                                 .foregroundColor(.textPrimary)
+                                            Text(date, style: .date)
+                                                .font(.subheadline)
+                                                .foregroundColor(.textSecondary)
+                                        }
+                                        Spacer()
+                                    }
+                                    .padding()
+                                    .background(Color.surface)
+                                    .cornerRadius(12)
+                                }
+                            }
+                        } else {
+                            // History (all doses including missed)
+                            if viewModel.allDoseLogs.isEmpty {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("No doses recorded yet.")
+                                        .foregroundColor(.textSecondary)
+                                }
+                            } else {
+                                ForEach(viewModel.allDoseLogs) { log in
+                                    HStack(alignment: .top, spacing: 12) {
+                                        // Status Icon
+                                        if log.status == .taken {
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .font(.title2)
+                                                .foregroundColor(.green)
                                         } else if log.status == .skipped {
-                                            Text("Skipped")
-                                                .font(.body)
+                                            Image(systemName: "exclamationmark.circle.fill")
+                                                .font(.title2)
                                                 .foregroundColor(.orange)
+                                        } else {
+                                            // Pending - red for missed
+                                            Image(systemName: "clock")
+                                                .font(.title2)
+                                                .foregroundColor(.red)
                                         }
                                         
-                                        // Date
-                                        Text(log.scheduledTime, style: .date)
-                                            .font(.caption)
-                                            .foregroundColor(.textSecondary)
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            // Status and Time
+                                            if let takenTime = log.takenTime {
+                                                Text("Taken at \(takenTime, style: .time)")
+                                                    .font(.body)
+                                                    .foregroundColor(.textPrimary)
+                                            } else if log.status == .skipped {
+                                                Text("Skipped")
+                                                    .font(.body)
+                                                    .foregroundColor(.orange)
+                                            } else {
+                                                // Missed dose
+                                                HStack(spacing: 4) {
+                                                    Text("Missed:")
+                                                        .font(.body)
+                                                        .fontWeight(.semibold)
+                                                        .foregroundColor(.red)
+                                                    Text("\(log.scheduledTime, style: .time)")
+                                                        .font(.body)
+                                                        .foregroundColor(.textPrimary)
+                                                }
+                                            }
+                                            
+                                            // Date
+                                            Text(log.scheduledTime, style: .date)
+                                                .font(.caption)
+                                                .foregroundColor(.textSecondary)
+                                        }
+                                        
+                                        Spacer()
                                     }
-                                    
-                                    Spacer()
+                                    .padding()
+                                    .background(Color.surface)
+                                    .cornerRadius(12)
                                 }
-                                .padding()
-                                .background(Color.surface)
-                                .cornerRadius(12)
                             }
                         }
                     }

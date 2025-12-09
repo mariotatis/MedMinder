@@ -148,8 +148,12 @@ class TreatmentDosageRegistryViewModel: ObservableObject {
                 return DoseLogWithMedication(doseLog: log, medication: medication)
             }
             
-            // Sort chronologically (oldest first, upcoming at bottom)
-            self.doseLogs = logsWithMedication.sorted { $0.doseLog.scheduledTime < $1.doseLog.scheduledTime }
+            // Sort chronologically using takenTime for taken doses, scheduledTime for others
+            self.doseLogs = logsWithMedication.sorted { log1, log2 in
+                let time1 = log1.doseLog.takenTime ?? log1.doseLog.scheduledTime
+                let time2 = log2.doseLog.takenTime ?? log2.doseLog.scheduledTime
+                return time1 < time2
+            }
             
             // Check completion status
             self.checkCompletion(medications: treatmentMedications, doseLogs: existingLogs)

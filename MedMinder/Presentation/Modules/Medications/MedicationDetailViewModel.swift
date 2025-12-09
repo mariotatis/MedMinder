@@ -122,8 +122,12 @@ class MedicationDetailViewModel: ObservableObject {
                 // We only want to show doses up to "now" in the Dosage Registry section
                 let pastDoses = allExpectedDoses.filter { $0.scheduledTime <= now }
                 
-                // Sort by most recent first
-                self.doseLogs = pastDoses.sorted(by: { $0.scheduledTime > $1.scheduledTime })
+                // Sort by most recent first, using takenTime for taken doses, scheduledTime for others
+                self.doseLogs = pastDoses.sorted(by: { log1, log2 in
+                    let time1 = log1.takenTime ?? log1.scheduledTime
+                    let time2 = log2.takenTime ?? log2.scheduledTime
+                    return time1 > time2
+                })
                 self.checkIfDoseLogged()
             })
             .store(in: &cancellables)

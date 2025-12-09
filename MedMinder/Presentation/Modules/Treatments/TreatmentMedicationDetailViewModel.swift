@@ -6,8 +6,10 @@ class TreatmentMedicationDetailViewModel: ObservableObject {
     @Published var profile: Profile?
     @Published var upcomingDoses: [Date] = []
     @Published var doseHistory: [DoseLog] = []
+    @Published var allDoseLogs: [DoseLog] = [] // All doses including missed
     @Published var medicationWasDeleted = false
     @Published var isCompleted: Bool = false
+    @Published var selectedSegment: Int = 0 // 0 = Upcoming, 1 = History
     
     let medicationUseCases: MedicationUseCases
     private let profileUseCases: ProfileUseCases
@@ -73,10 +75,17 @@ class TreatmentMedicationDetailViewModel: ObservableObject {
                 
                 let medicationLogs = logs.filter { $0.medicationId == self.medication.id }
                 
-                // Filter history (taken or skipped)
+                // Generate all expected doses (including missed)
+                self.generateAllDoses(existingLogs: medicationLogs)
+                
+                // Filter history (taken or skipped), sorted by takenTime
                 self.doseHistory = medicationLogs
                     .filter { $0.status == .taken || $0.status == .skipped }
-                    .sorted { $0.scheduledTime > $1.scheduledTime }
+                    .sorted { log1, log2 in
+                        let time1 = log1.takenTime ?? log1.scheduledTime
+                        let time2 = log2.takenTime ?? log2.scheduledTime
+                        return time1 > time2
+                    }
                 
                 // Generate upcoming doses
                 self.generateUpcomingDoses(existingLogs: medicationLogs)
@@ -116,6 +125,56 @@ class TreatmentMedicationDetailViewModel: ObservableObject {
         }
         
         upcomingDoses = doses.sorted()
+    }
+    
+    private func generateAllDoses(existingLogs: [DoseLog]) {
+        let now = Date()
+        let calendar = Calendar.current
+        
+        // Calculate end date
+        guard let endDate = calendar.date(byAdding: .day, value: medication.durationDays, to: medication.initialTime) else {
+            self.allDoseLogs = existingLogs.sorted(by: { $0.scheduledTime > $1.scheduledTime })
+            return
+        }
+        
+        // Generate all expected dose times from initial time to end date
+        var allExpectedDoses: [DoseLog] = []
+        var currentTime = medication.initialTime
+        let frequencyInterval = TimeInterval(medication.frequencyHours * 3600)
+        
+        while currentTime <= endDate {
+            // Check if a log exists for this scheduled time
+            if let existingLog = existingLogs.first(where: { log in
+                calendar.isDate(log.scheduledTime, equalTo: currentTime, toGranularity: .minute)
+            }) {
+                allExpectedDoses.append(existingLog)
+            } else {
+                // No log exists - create a pending entry (missed or upcoming)
+                let pendingLog = DoseLog(
+                    medicationId: medication.id,
+                    scheduledTime: currentTime,
+                    takenTime: nil,
+                    status: .pending
+                )
+                allExpectedDoses.append(pendingLog)
+            }
+            
+            currentTime = currentTime.addingTimeInterval(frequencyInterval)
+        }
+        
+        // Filter to show only past/current doses (not future upcoming doses)
+        let pastDoses = allExpectedDoses.filter { $0.scheduledTime <= now }
+        
+        // Sort by most recent first, using takenTime for taken doses
+        self.allDoseLogs = pastDoses.sorted(by: { log1, log2 in
+            let time1 = log1.takenTime ?? log1.scheduledTime
+            let time2 = log2.takenTime ?? log2.scheduledTime
+            return time1 > time2
+        })
+    }
+    
+    var missedDoseCount: Int {
+        allDoseLogs.filter { $0.status == .pending && $0.scheduledTime < Date() }.count
     }
     
     private func checkCompletion(existingLogs: [DoseLog]) {

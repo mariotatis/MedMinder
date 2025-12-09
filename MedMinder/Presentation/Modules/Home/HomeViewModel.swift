@@ -270,4 +270,11 @@ struct MedicationDose: Identifiable {
     let treatmentName: String
     let scheduledTime: Date
     let isTaken: Bool
+    
+    // Check if dose is within 4-hour window for showing action buttons
+    var isWithinActionWindow: Bool {
+        let now = Date()
+        let fourHoursBeforeScheduled = scheduledTime.addingTimeInterval(-4 * 3600)
+        return now >= fourHoursBeforeScheduled && now <= scheduledTime.addingTimeInterval(24 * 3600)
+    }
 }
