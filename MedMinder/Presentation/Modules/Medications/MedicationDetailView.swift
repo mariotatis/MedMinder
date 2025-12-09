@@ -50,50 +50,47 @@ struct MedicationDetailView: View {
                     .background(Color.surface)
                     .cornerRadius(16)
                     
-                    // Dose Time Input - only show for current/past doses
-                    if !viewModel.isFutureDose {
-                        HStack {
-                            Text("Dose Time:")
-                                .font(.headline)
-                                .foregroundColor(.textPrimary)
-                            
-                            Spacer()
-                            
-                            DatePicker("", selection: $viewModel.currentDoseTime, displayedComponents: .hourAndMinute)
-                                .datePickerStyle(CompactDatePickerStyle())
-                                .labelsHidden()
-                                .disabled(viewModel.isDoseLogged)
-                        }
-                        .padding()
-                        .background(Color.surface)
-                        .cornerRadius(16)
-                    }
-                    
-                    // Action Buttons - only show for current/past doses
-                    if !viewModel.isFutureDose {
-                        HStack(spacing: 12) {
+                    // Time picker and action buttons in one row
+                    // Time picker and action buttons in one row
+                    if viewModel.isWithinActionWindow {
+                        HStack(spacing: 8) {
+                            // Action buttons
                             Button(action: viewModel.markAsTaken) {
-                                Text("Mark as Taken")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(viewModel.isDoseLogged ? Color.gray : Color.primaryAction)
-                                    .cornerRadius(12)
+                                Text("Taken")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 4)
+                                .background(viewModel.isDoseLogged ? Color.gray : Color.green)
+                                .cornerRadius(8)
                             }
                             .disabled(viewModel.isDoseLogged)
                             
                             Button(action: viewModel.markAsSkipped) {
                                 Text("Skipped")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(viewModel.isDoseLogged ? Color.gray : Color.orange)
-                                    .cornerRadius(12)
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 4)
+                                .background(viewModel.isDoseLogged ? Color.gray : Color.orange)
+                                .cornerRadius(8)
                             }
                             .disabled(viewModel.isDoseLogged)
+                            
+                            // Time picker
+                            DatePicker("", selection: $viewModel.currentDoseTime, displayedComponents: .hourAndMinute)
+                                .datePickerStyle(CompactDatePickerStyle())
+                                .labelsHidden()
+                                .disabled(viewModel.isDoseLogged)
+                                .frame(maxWidth: 100)
                         }
+                        .padding()
+                        .background(Color.surface)
+                        .cornerRadius(16)
                     }
                     
                     // Segmented Control and Doses

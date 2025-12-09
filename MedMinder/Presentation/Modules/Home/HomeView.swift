@@ -7,6 +7,9 @@ struct HomeView: View {
     @State private var showAddTreatment = false
     @State private var showFilterPopover = false
     @State private var cancellables = Set<AnyCancellable>()
+    @State private var doseTimes: [String: Date] = [:] // Track time for each dose by medication ID + scheduled time
+    @State private var showTimeChangeConfirmation = false
+    @State private var pendingDoseAction: (() -> Void)?
     
     var body: some View {
         NavigationView {
@@ -63,49 +66,74 @@ struct HomeView: View {
                                         
                                         ForEach(section.doses) { dose in
                                             if dose.isWithinActionWindow {
-                                                // Show card with action buttons (no navigation)
-                                                VStack(spacing: 0) {
-                                                    MedicationCard(
+                                                // Show card with action buttons (wrapped in NavigationLink)
+                                                NavigationLink(destination: MedicationDetailView(
+                                                    viewModel: MedicationDetailViewModel(
                                                         medication: dose.medication,
-                                                        profile: dose.profile,
-                                                        time: dose.scheduledTime,
-                                                        isCurrentPeriod: section.isCurrent,
-                                                        treatmentName: dose.treatmentName
+                                                        scheduledTime: dose.scheduledTime,
+                                                        medicationUseCases: viewModel.medicationUseCases,
+                                                        treatmentUseCases: viewModel.treatmentUseCases,
+                                                        profileUseCases: viewModel.profileUseCases
                                                     )
-                                                    
-                                                    // Action buttons
-                                                    HStack(spacing: 12) {
-                                                        Button(action: {
-                                                            markDoseAsTaken(dose: dose)
-                                                        }) {
-                                                            Text("Mark as Taken")
-                                                                .font(.subheadline)
-                                                                .fontWeight(.medium)
-                                                                .foregroundColor(.white)
-                                                                .frame(maxWidth: .infinity)
-                                                                .padding(.vertical, 12)
-                                                                .background(Color.green)
-                                                                .cornerRadius(10)
-                                                        }
+                                                )) {
+                                                    VStack(spacing: 0) {
+                                                        MedicationCard(
+                                                            medication: dose.medication,
+                                                            profile: dose.profile,
+                                                            time: dose.scheduledTime,
+                                                            isCurrentPeriod: section.isCurrent,
+                                                            treatmentName: dose.treatmentName,
+                                                            roundedCorners: [.topLeft, .topRight]
+                                                        )
                                                         
-                                                        Button(action: {
-                                                            markDoseAsSkipped(dose: dose)
-                                                        }) {
-                                                            Text("Mark as Skipped")
-                                                                .font(.subheadline)
-                                                                .fontWeight(.medium)
-                                                                .foregroundColor(.white)
-                                                                .frame(maxWidth: .infinity)
-                                                                .padding(.vertical, 12)
-                                                                .background(Color.orange)
-                                                                .cornerRadius(10)
+                                                        
+                                                        // Time picker and action buttons in one row
+                                                        HStack(spacing: 8) {
+                                                            // Action buttons
+                                                            Button(action: {
+                                                                markDoseAsTaken(dose: dose)
+                                                            }) {
+                                                                Text("Taken")
+                                                                    .font(.caption)
+                                                                    .fontWeight(.semibold)
+                                                                    .foregroundColor(.white)
+                                                                    .frame(maxWidth: .infinity)
+                                                                    .padding(.vertical, 8)
+                                                                    .padding(.horizontal, 4)
+                                                                    .background(Color.green)
+                                                                    .cornerRadius(8)
+                                                            }
+                                                            
+                                                            Button(action: {
+                                                                markDoseAsSkipped(dose: dose)
+                                                            }) {
+                                                                Text("Skipped")
+                                                                    .font(.caption)
+                                                                    .fontWeight(.semibold)
+                                                                    .foregroundColor(.white)
+                                                                    .frame(maxWidth: .infinity)
+                                                                    .padding(.vertical, 8)
+                                                                    .padding(.horizontal, 4)
+                                                                    .background(Color.orange)
+                                                                    .cornerRadius(8)
+                                                            }
+                                                            
+                                                            // Time picker
+                                                            DatePicker("", selection: Binding(
+                                                                get: { getDoseTime(for: dose) },
+                                                                set: { setDoseTime(for: dose, time: $0) }
+                                                            ), displayedComponents: .hourAndMinute)
+                                                                .datePickerStyle(CompactDatePickerStyle())
+                                                                .labelsHidden()
+                                                                .frame(maxWidth: 100)
                                                         }
+                                                        .padding(.horizontal)
+                                                        .padding(.vertical, 10)
+                                                        .background(section.isCurrent ? Color.blue.opacity(0.1) : Color.surface)
+                                                        .cornerRadius(16, corners: [.bottomLeft, .bottomRight])
                                                     }
-                                                    .padding(.horizontal)
-                                                    .padding(.bottom, 12)
-                                                    .background(section.isCurrent ? Color.blue.opacity(0.1) : Color.surface)
                                                 }
-                                                .cornerRadius(16)
+                                                .buttonStyle(PlainButtonStyle())
                                                 .padding(.horizontal)
                                             } else {
                                                 // Show as NavigationLink (normal behavior)
@@ -156,49 +184,74 @@ struct HomeView: View {
                                         
                                         ForEach(section.doses) { dose in
                                             if dose.isWithinActionWindow {
-                                                // Show card with action buttons (no navigation)
-                                                VStack(spacing: 0) {
-                                                    MedicationCard(
+                                                // Show card with action buttons (wrapped in NavigationLink)
+                                                NavigationLink(destination: MedicationDetailView(
+                                                    viewModel: MedicationDetailViewModel(
                                                         medication: dose.medication,
-                                                        profile: dose.profile,
-                                                        time: dose.scheduledTime,
-                                                        isCurrentPeriod: false,
-                                                        treatmentName: dose.treatmentName
+                                                        scheduledTime: dose.scheduledTime,
+                                                        medicationUseCases: viewModel.medicationUseCases,
+                                                        treatmentUseCases: viewModel.treatmentUseCases,
+                                                        profileUseCases: viewModel.profileUseCases
                                                     )
-                                                    
-                                                    // Action buttons
-                                                    HStack(spacing: 12) {
-                                                        Button(action: {
-                                                            markDoseAsTaken(dose: dose)
-                                                        }) {
-                                                            Text("Mark as Taken")
-                                                                .font(.subheadline)
-                                                                .fontWeight(.medium)
-                                                                .foregroundColor(.white)
-                                                                .frame(maxWidth: .infinity)
-                                                                .padding(.vertical, 12)
-                                                                .background(Color.green)
-                                                                .cornerRadius(10)
-                                                        }
+                                                )) {
+                                                    VStack(spacing: 0) {
+                                                        MedicationCard(
+                                                            medication: dose.medication,
+                                                            profile: dose.profile,
+                                                            time: dose.scheduledTime,
+                                                            isCurrentPeriod: false,
+                                                            treatmentName: dose.treatmentName,
+                                                            roundedCorners: [.topLeft, .topRight]
+                                                        )
                                                         
-                                                        Button(action: {
-                                                            markDoseAsSkipped(dose: dose)
-                                                        }) {
-                                                            Text("Mark as Skipped")
-                                                                .font(.subheadline)
-                                                                .fontWeight(.medium)
-                                                                .foregroundColor(.white)
-                                                                .frame(maxWidth: .infinity)
-                                                                .padding(.vertical, 12)
-                                                                .background(Color.orange)
-                                                                .cornerRadius(10)
+                                                        
+                                                        // Time picker and action buttons in one row
+                                                        HStack(spacing: 8) {
+                                                            // Action buttons
+                                                            Button(action: {
+                                                                markDoseAsTaken(dose: dose)
+                                                            }) {
+                                                                Text("Taken")
+                                                                    .font(.caption)
+                                                                    .fontWeight(.semibold)
+                                                                    .foregroundColor(.white)
+                                                                    .frame(maxWidth: .infinity)
+                                                                    .padding(.vertical, 8)
+                                                                    .padding(.horizontal, 4)
+                                                                    .background(Color.green)
+                                                                    .cornerRadius(8)
+                                                            }
+                                                            
+                                                            Button(action: {
+                                                                markDoseAsSkipped(dose: dose)
+                                                            }) {
+                                                                Text("Skipped")
+                                                                    .font(.caption)
+                                                                    .fontWeight(.semibold)
+                                                                    .foregroundColor(.white)
+                                                                    .frame(maxWidth: .infinity)
+                                                                    .padding(.vertical, 8)
+                                                                    .padding(.horizontal, 4)
+                                                                    .background(Color.orange)
+                                                                    .cornerRadius(8)
+                                                            }
+                                                            
+                                                            // Time picker
+                                                            DatePicker("", selection: Binding(
+                                                                get: { getDoseTime(for: dose) },
+                                                                set: { setDoseTime(for: dose, time: $0) }
+                                                            ), displayedComponents: .hourAndMinute)
+                                                                .datePickerStyle(CompactDatePickerStyle())
+                                                                .labelsHidden()
+                                                                .frame(maxWidth: 100)
                                                         }
+                                                        .padding(.horizontal)
+                                                        .padding(.vertical, 10)
+                                                        .background(Color.surface)
+                                                        .cornerRadius(16, corners: [.bottomLeft, .bottomRight])
                                                     }
-                                                    .padding(.horizontal)
-                                                    .padding(.bottom, 12)
-                                                    .background(Color.surface)
                                                 }
-                                                .cornerRadius(16)
+                                                .buttonStyle(PlainButtonStyle())
                                                 .padding(.horizontal)
                                             } else {
                                                 // Show as NavigationLink (normal behavior)
@@ -273,6 +326,22 @@ struct HomeView: View {
                     viewModel.fetchData()
                 }
             }
+            .alert(isPresented: $showTimeChangeConfirmation) {
+                Alert(
+                    title: Text("Update Future Doses?"),
+                    message: Text("You changed the dose time by more than 20 minutes. Do you want to update all future doses based on this new time?"),
+                    primaryButton: .default(Text("Update All Future Doses")) {
+                        if let action = pendingDoseAction {
+                            action()
+                        }
+                    },
+                    secondaryButton: .cancel(Text("Just This One")) {
+                        if let action = pendingDoseAction {
+                            action()
+                        }
+                    }
+                )
+            }
         }
     }
     
@@ -285,21 +354,53 @@ struct HomeView: View {
         }
     }
     
+    
+    // Helper methods for managing dose times
+    private func doseKey(for dose: MedicationDose) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd-HH-mm"
+        return "\(dose.medication.id)-\(formatter.string(from: dose.scheduledTime))"
+    }
+    
+    private func getDoseTime(for dose: MedicationDose) -> Date {
+        let key = doseKey(for: dose)
+        return doseTimes[key] ?? Date() // Default to current time
+    }
+    
+    private func setDoseTime(for dose: MedicationDose, time: Date) {
+        let key = doseKey(for: dose)
+        doseTimes[key] = time
+    }
+    
     // Helper methods for marking doses
     private func markDoseAsTaken(dose: MedicationDose) {
-        let log = DoseLog(
-            medicationId: dose.medication.id,
-            scheduledTime: dose.scheduledTime,
-            takenTime: Date(),
-            status: .taken
-        )
+        let selectedTime = getDoseTime(for: dose)
+        let timeDifference = abs(selectedTime.timeIntervalSince(dose.scheduledTime))
+        let twentyMinutesInSeconds: TimeInterval = 20 * 60
         
-        viewModel.medicationUseCases.logDose(log)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in }, receiveValue: { [viewModel] _ in
-                viewModel.fetchData()
-            })
-            .store(in: &cancellables)
+        let logAction = {
+            let log = DoseLog(
+                medicationId: dose.medication.id,
+                scheduledTime: dose.scheduledTime,
+                takenTime: selectedTime,
+                status: .taken
+            )
+            
+            self.viewModel.medicationUseCases.logDose(log)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { _ in }, receiveValue: { [viewModel] _ in
+                    viewModel.fetchData()
+                })
+                .store(in: &self.cancellables)
+        }
+        
+        // Only show confirmation if time difference is greater than 20 minutes
+        if timeDifference > twentyMinutesInSeconds {
+            pendingDoseAction = logAction
+            showTimeChangeConfirmation = true
+        } else {
+            logAction()
+        }
     }
     
     private func markDoseAsSkipped(dose: MedicationDose) {

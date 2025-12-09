@@ -63,6 +63,50 @@ struct TreatmentMedicationDetailView: View {
                     .background(Color.surface)
                     .cornerRadius(16)
                     
+                    // Time picker and action buttons in one row
+                    // Time picker and action buttons in one row
+                    if viewModel.isWithinActionWindow {
+                        HStack(spacing: 8) {
+                            // Action buttons
+                            Button(action: viewModel.markAsTaken) {
+                                Text("Taken")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 4)
+                                .background(viewModel.isDoseLogged ? Color.gray : Color.green)
+                                .cornerRadius(8)
+                            }
+                            .disabled(viewModel.isDoseLogged)
+                            
+                            Button(action: viewModel.markAsSkipped) {
+                                Text("Skipped")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 4)
+                                .background(viewModel.isDoseLogged ? Color.gray : Color.orange)
+                                .cornerRadius(8)
+                            }
+                            .disabled(viewModel.isDoseLogged)
+                            
+                            // Time picker
+                            DatePicker("", selection: $viewModel.currentDoseTime, displayedComponents: .hourAndMinute)
+                                .datePickerStyle(CompactDatePickerStyle())
+                                .labelsHidden()
+                                .disabled(viewModel.isDoseLogged)
+                                .frame(maxWidth: 100)
+                        }
+                        .padding()
+                        .background(Color.surface)
+                        .cornerRadius(16)
+                    }
+
+                    
                     // Custom Segmented Control with Badge
                     VStack(alignment: .leading, spacing: 16) {
                         HStack(spacing: 0) {
@@ -242,6 +286,18 @@ struct TreatmentMedicationDetailView: View {
         }
         .onAppear {
             viewModel.fetchData()
+        }
+        .alert(isPresented: $viewModel.showTimeChangeConfirmation) {
+            Alert(
+                title: Text("Update Future Doses?"),
+                message: Text("You changed the dose time by more than 20 minutes. Do you want to update all future doses based on this new time?"),
+                primaryButton: .default(Text("Update All Future Doses")) {
+                    viewModel.logDoseAsTaken(updateFutureDoses: true)
+                },
+                secondaryButton: .cancel(Text("Just This One")) {
+                    viewModel.logDoseAsTaken(updateFutureDoses: false)
+                }
+            )
         }
     }
 }

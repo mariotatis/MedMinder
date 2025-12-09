@@ -27,6 +27,7 @@
 		9FDBDE2EDEEECF295ED60D31 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40406047ADAB3DF5FDB2AAB /* CustomTextField.swift */; };
 		A43A746B1A9873DEF5F45528 /* LocalRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B1A6EA577A5E1AE522516 /* LocalRepositories.swift */; };
 		AA0FFA7ADDCB84D31C4203F3 /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08377973F9951133FC385721 /* AppContainer.swift */; };
+		AC2019F22EE8DDB700CEB6B9 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2019F12EE8DDB700CEB6B9 /* View+Extensions.swift */; };
 		AC830C732ED831B80073805A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC830C712ED831B80073805A /* SettingsView.swift */; };
 		AC830C792ED8DFB70073805A /* HealthQuotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC830C772ED8DFB70073805A /* HealthQuotes.swift */; };
 		AC830C7C2ED8E7160073805A /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC830C7A2ED8E7160073805A /* NotificationService.swift */; };
@@ -75,6 +76,7 @@
 		8A5004A5B36156946217188F /* MedMinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MedMinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C4EB717574503CD8F8B3DBA /* MedicationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDetailView.swift; sourceTree = "<group>"; };
 		AA1297DEB3ACC7C991ED3106 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		AC2019F12EE8DDB700CEB6B9 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		AC4C8B032ED7B91600A2B292 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		AC830C712ED831B80073805A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AC830C772ED8DFB70073805A /* HealthQuotes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthQuotes.swift; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				3715F4D903570E68DC34404D /* Color+Extensions.swift */,
+				AC2019F12EE8DDB700CEB6B9 /* View+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -399,6 +402,7 @@
 				ACF510E62EDF93F000B25ACD /* ProfileFilterView.swift in Sources */,
 				F7ACA909D882ECE4793E11F6 /* AddMedicationView.swift in Sources */,
 				ACFD9ACE2ECF9290003F6E66 /* ProfileListViewModel.swift in Sources */,
+				AC2019F22EE8DDB700CEB6B9 /* View+Extensions.swift in Sources */,
 				F87B5FE14687F762A2EC9BAD /* AddMedicationViewModel.swift in Sources */,
 				98ACDEE10546B0D756E704D0 /* AddProfileView.swift in Sources */,
 				ACDF60CC2ED5825A003C4F41 /* TreatmentMedicationDetailView.swift in Sources */,

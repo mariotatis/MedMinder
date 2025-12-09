@@ -23,7 +23,7 @@ class MedicationDetailViewModel: ObservableObject {
         self.medication = medication
         self.scheduledTime = scheduledTime
         self.originalScheduledTime = scheduledTime
-        self.currentDoseTime = scheduledTime
+        self.currentDoseTime = Date() // Initialize with current time
         self.medicationUseCases = medicationUseCases
         self.treatmentUseCases = treatmentUseCases
         self.profileUseCases = profileUseCases
@@ -184,15 +184,23 @@ class MedicationDetailViewModel: ObservableObject {
         return scheduledTime > Date()
     }
     
+    var isWithinActionWindow: Bool {
+        let now = Date()
+        let fourHoursBeforeScheduled = scheduledTime.addingTimeInterval(-4 * 3600)
+        // Allow actions from 4 hours before until 24 hours after
+        return now >= fourHoursBeforeScheduled && now <= scheduledTime.addingTimeInterval(24 * 3600)
+    }
+    
     var missedDoseCount: Int {
         doseLogs.filter { $0.status == .pending && $0.scheduledTime < Date() }.count
     }
     
     func markAsTaken() {
-        let calendar = Calendar.current
-        let timeChanged = !calendar.isDate(currentDoseTime, equalTo: originalScheduledTime, toGranularity: .minute)
+        let timeDifference = abs(currentDoseTime.timeIntervalSince(originalScheduledTime))
+        let twentyMinutesInSeconds: TimeInterval = 20 * 60
         
-        if timeChanged {
+        // Only show confirmation if time difference is greater than 20 minutes
+        if timeDifference > twentyMinutesInSeconds {
             showTimeChangeConfirmation = true
         } else {
             logDoseAsTaken(updateFutureDoses: false)

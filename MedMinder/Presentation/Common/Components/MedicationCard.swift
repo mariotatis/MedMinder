@@ -6,6 +6,7 @@ struct MedicationCard: View {
     let time: Date
     var isCurrentPeriod: Bool = false
     var treatmentName: String? = nil
+    var roundedCorners: UIRectCorner = .allCorners
     
     var body: some View {
         HStack(spacing: 16) {
@@ -60,7 +61,7 @@ struct MedicationCard: View {
         }
         .padding()
         .background(isCurrentPeriod ? Color.blue.opacity(0.1) : Color.surface)
-        .cornerRadius(16)
+        .cornerRadius(16, corners: roundedCorners)
     }
 }
 

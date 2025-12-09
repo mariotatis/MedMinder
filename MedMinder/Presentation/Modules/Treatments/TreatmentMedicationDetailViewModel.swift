@@ -10,6 +10,17 @@ class TreatmentMedicationDetailViewModel: ObservableObject {
     @Published var medicationWasDeleted = false
     @Published var isCompleted: Bool = false
     @Published var selectedSegment: Int = 0 // 0 = Upcoming, 1 = History
+    @Published var currentDoseTime: Date = Date() // Time picker for marking doses
+    @Published var showTimeChangeConfirmation: Bool = false
+    @Published var isDoseLogged: Bool = false
+    
+    var isWithinActionWindow: Bool {
+        guard let nextDose = upcomingDoses.first else { return false }
+        let now = Date()
+        let fourHoursBeforeScheduled = nextDose.addingTimeInterval(-4 * 3600)
+        // Allow actions from 4 hours before until 24 hours after
+        return now >= fourHoursBeforeScheduled && now <= nextDose.addingTimeInterval(24 * 3600)
+    }
     
     let medicationUseCases: MedicationUseCases
     private let profileUseCases: ProfileUseCases
@@ -21,6 +32,7 @@ class TreatmentMedicationDetailViewModel: ObservableObject {
         self.medicationUseCases = medicationUseCases
         self.profileUseCases = profileUseCases
         self.treatmentUseCases = treatmentUseCases
+        self.currentDoseTime = Date() // Initialize with current time
     }
     
     func fetchData() {
@@ -201,5 +213,75 @@ class TreatmentMedicationDetailViewModel: ObservableObject {
         let takenLogs = existingLogs.filter { $0.status == .taken || $0.status == .skipped }
         
         self.isCompleted = takenLogs.count >= expectedDoses.count
+    }
+    
+    // MARK: - Dose Logging
+    
+    func markAsTaken() {
+        let timeDifference = abs(currentDoseTime.timeIntervalSince(Date()))
+        let twentyMinutesInSeconds: TimeInterval = 20 * 60
+        
+        // Only show confirmation if time difference is greater than 20 minutes
+        if timeDifference > twentyMinutesInSeconds {
+            showTimeChangeConfirmation = true
+        } else {
+            logDoseAsTaken(updateFutureDoses: false)
+        }
+    }
+    
+    func logDoseAsTaken(updateFutureDoses: Bool) {
+        // Find the next upcoming dose or use current time
+        let scheduledTime = upcomingDoses.first ?? Date()
+        
+        let log = DoseLog(
+            medicationId: medication.id,
+            scheduledTime: scheduledTime,
+            takenTime: currentDoseTime,
+            status: .taken
+        )
+        
+        var publishers: [AnyPublisher<Void, Error>] = [medicationUseCases.logDose(log)]
+        
+        if updateFutureDoses {
+            publishers.append(updateMedicationInitialTime())
+        }
+        
+        Publishers.MergeMany(publishers)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
+                self?.fetchDoses()
+                self?.currentDoseTime = Date() // Reset to current time
+            })
+            .store(in: &cancellables)
+    }
+    
+    func markAsSkipped() {
+        // Find the next upcoming dose or use current time
+        let scheduledTime = upcomingDoses.first ?? Date()
+        
+        let log = DoseLog(
+            medicationId: medication.id,
+            scheduledTime: scheduledTime,
+            takenTime: nil,
+            status: .skipped
+        )
+        
+        medicationUseCases.logDose(log)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
+                self?.fetchDoses()
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func updateMedicationInitialTime() -> AnyPublisher<Void, Error> {
+        var updatedMedication = medication
+        updatedMedication.initialTime = currentDoseTime
+        
+        return medicationUseCases.updateMedication(updatedMedication)
+            .handleEvents(receiveOutput: { [weak self] _ in
+                self?.medication = updatedMedication
+            })
+            .eraseToAnyPublisher()
     }
 }
