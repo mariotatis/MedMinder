@@ -105,7 +105,8 @@ class TreatmentDosageRegistryViewModel: ObservableObject {
                 )
                 
                 // Generate ALL doses from initial time to end date (including past missed doses)
-                var currentTime = medication.initialTime
+                // Normalize to zero seconds
+                var currentTime = calendar.date(bySetting: .second, value: 0, of: medication.initialTime) ?? medication.initialTime
                 let frequencyInterval = TimeInterval(medication.frequencyHours * 3600)
                 
                 var expectedCount = 0
@@ -148,11 +149,11 @@ class TreatmentDosageRegistryViewModel: ObservableObject {
                 return DoseLogWithMedication(doseLog: log, medication: medication)
             }
             
-            // Sort chronologically using takenTime for taken doses, scheduledTime for others
+            // Sort chronologically (newest first) using takenTime for taken doses, scheduledTime for others
             self.doseLogs = logsWithMedication.sorted { log1, log2 in
                 let time1 = log1.doseLog.takenTime ?? log1.doseLog.scheduledTime
                 let time2 = log2.doseLog.takenTime ?? log2.doseLog.scheduledTime
-                return time1 < time2
+                return time1 > time2
             }
             
             // Check completion status

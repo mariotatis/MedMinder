@@ -126,7 +126,8 @@ class TreatmentMedicationDetailViewModel: ObservableObject {
         
         // Generate doses from now until end date
         var doses: [Date] = []
-        var currentTime = medication.initialTime
+        // Normalize to zero seconds
+        var currentTime = calendar.date(bySetting: .second, value: 0, of: medication.initialTime) ?? medication.initialTime
         let frequencyInterval = TimeInterval(medication.frequencyHours * 3600)
         
         while currentTime <= endDate {
@@ -151,7 +152,8 @@ class TreatmentMedicationDetailViewModel: ObservableObject {
         
         // Generate all expected dose times from initial time to end date
         var allExpectedDoses: [DoseLog] = []
-        var currentTime = medication.initialTime
+        // Normalize to zero seconds
+        var currentTime = calendar.date(bySetting: .second, value: 0, of: medication.initialTime) ?? medication.initialTime
         let frequencyInterval = TimeInterval(medication.frequencyHours * 3600)
         
         while currentTime <= endDate {

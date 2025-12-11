@@ -47,7 +47,9 @@ class NotificationService: ObservableObject {
                     let now = Date()
                     
                     // Calculate start date (today or start date if future)
-                    let startDate = max(now, medication.initialTime)
+                    // Normalize to zero seconds for consistency
+                    let normalizedInitialTime = calendar.date(bySetting: .second, value: 0, of: medication.initialTime) ?? medication.initialTime
+                    let startDate = max(now, normalizedInitialTime)
                     
                     // Determine how many days to schedule, capped at 7 or the medication's duration
                     // We need to calculate the end date of the medication
@@ -59,7 +61,7 @@ class NotificationService: ObservableObject {
                         // Stop if we are past the medication's end date
                         if date > medicationEndDate { break }
                         
-                        var currentDoseTime = medication.initialTime
+                        var currentDoseTime = normalizedInitialTime
                         
                         // Fast forward to the day we are scheduling
                         while currentDoseTime < calendar.startOfDay(for: date) {
