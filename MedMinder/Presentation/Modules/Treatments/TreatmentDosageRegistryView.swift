@@ -77,7 +77,9 @@ struct TreatmentDosageRegistryView: View {
                     // Content based on selected segment
                     if viewModel.selectedSegment == 0 {
                         // Upcoming Doses (future pending doses)
-                        let upcomingDoses = viewModel.doseLogs.filter { $0.doseLog.status == .pending && $0.doseLog.scheduledTime > Date() }
+                        let upcomingDoses = viewModel.doseLogs
+                            .filter { $0.doseLog.status == .pending && $0.doseLog.scheduledTime > Date() }
+                            .sorted { $0.doseLog.scheduledTime < $1.doseLog.scheduledTime }
                         
                         if upcomingDoses.isEmpty {
                             VStack(alignment: .leading, spacing: 4) {
@@ -186,33 +188,15 @@ struct TreatmentDosageRegistryView: View {
                                     
                                     // Action buttons for missed doses (only show for past doses)
                                     if item.doseLog.status == .pending && item.doseLog.scheduledTime < Date() {
-                                        HStack(spacing: 8) {
-                                            Button(action: {
-                                                viewModel.markDoseAsTaken(medicationId: item.medication.id, scheduledTime: item.doseLog.scheduledTime)
-                                            }) {
-                                                Text("Mark as Taken")
-                                                    .font(.caption)
-                                                    .fontWeight(.medium)
-                                                    .foregroundColor(.white)
-                                                    .padding(.horizontal, 12)
-                                                    .padding(.vertical, 6)
-                                                    .background(Color.green)
-                                                    .cornerRadius(8)
-                                            }
-                                            
-                                            Button(action: {
+                                        MissedDoseActionsView(
+                                            scheduledTime: item.doseLog.scheduledTime,
+                                            onTaken: { takenTime in
+                                                viewModel.markDoseAsTaken(medicationId: item.medication.id, scheduledTime: item.doseLog.scheduledTime, takenTime: takenTime)
+                                            },
+                                            onSkipped: {
                                                 viewModel.markDoseAsSkipped(medicationId: item.medication.id, scheduledTime: item.doseLog.scheduledTime)
-                                            }) {
-                                                Text("Mark as Skipped")
-                                                    .font(.caption)
-                                                    .fontWeight(.medium)
-                                                    .foregroundColor(.white)
-                                                    .padding(.horizontal, 12)
-                                                    .padding(.vertical, 6)
-                                                    .background(Color.orange)
-                                                    .cornerRadius(8)
                                             }
-                                        }
+                                        )
                                     }
                                 }
                                 .padding()

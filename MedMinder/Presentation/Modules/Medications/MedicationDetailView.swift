@@ -237,33 +237,15 @@ struct MedicationDetailView: View {
                                         
                                         // Action buttons for missed doses (only show for past doses)
                                         if log.status == .pending && log.scheduledTime < Date() {
-                                            HStack(spacing: 8) {
-                                                Button(action: {
-                                                    viewModel.markDoseAsTaken(scheduledTime: log.scheduledTime)
-                                                }) {
-                                                    Text("Mark as Taken")
-                                                        .font(.caption)
-                                                        .fontWeight(.medium)
-                                                        .foregroundColor(.white)
-                                                        .padding(.horizontal, 12)
-                                                        .padding(.vertical, 6)
-                                                        .background(Color.green)
-                                                        .cornerRadius(8)
-                                                }
-                                                
-                                                Button(action: {
+                                            MissedDoseActionsView(
+                                                scheduledTime: log.scheduledTime,
+                                                onTaken: { takenTime in
+                                                    viewModel.markDoseAsTaken(scheduledTime: log.scheduledTime, takenTime: takenTime)
+                                                },
+                                                onSkipped: {
                                                     viewModel.markDoseAsSkipped(scheduledTime: log.scheduledTime)
-                                                }) {
-                                                    Text("Mark as Skipped")
-                                                        .font(.caption)
-                                                        .fontWeight(.medium)
-                                                        .foregroundColor(.white)
-                                                        .padding(.horizontal, 12)
-                                                        .padding(.vertical, 6)
-                                                        .background(Color.orange)
-                                                        .cornerRadius(8)
                                                 }
-                                            }
+                                            )
                                         }
                                     }
                                     .padding()

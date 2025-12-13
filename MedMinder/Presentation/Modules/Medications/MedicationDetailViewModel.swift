@@ -261,11 +261,11 @@ class MedicationDetailViewModel: ObservableObject {
     
     // MARK: - Mark Specific Doses
     
-    func markDoseAsTaken(scheduledTime: Date) {
+    func markDoseAsTaken(scheduledTime: Date, takenTime: Date = Date()) {
         let log = DoseLog(
             medicationId: medication.id,
             scheduledTime: scheduledTime,
-            takenTime: Date(),
+            takenTime: takenTime,
             status: .taken
         )
         

@@ -257,6 +257,38 @@ class TreatmentMedicationDetailViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    func markDoseAsTaken(scheduledTime: Date, takenTime: Date = Date()) {
+        let log = DoseLog(
+            medicationId: medication.id,
+            scheduledTime: scheduledTime,
+            takenTime: takenTime,
+            status: .taken
+        )
+        
+        medicationUseCases.logDose(log)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
+                self?.fetchDoses() // Changed from fetchDoseHistory() to fetchDoses() to match existing pattern
+            })
+            .store(in: &cancellables)
+    }
+    
+    func markDoseAsSkipped(scheduledTime: Date) {
+        let log = DoseLog(
+            medicationId: medication.id,
+            scheduledTime: scheduledTime,
+            takenTime: nil,
+            status: .skipped
+        )
+        
+        medicationUseCases.logDose(log)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
+                self?.fetchDoses()
+            })
+            .store(in: &cancellables)
+    }
+    
     func markAsSkipped() {
         // Find the next upcoming dose or use current time
         let scheduledTime = upcomingDoses.first ?? Date()

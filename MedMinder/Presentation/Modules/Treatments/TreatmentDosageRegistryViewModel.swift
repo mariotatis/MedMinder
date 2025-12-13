@@ -164,11 +164,11 @@ class TreatmentDosageRegistryViewModel: ObservableObject {
     
     // MARK: - Mark Specific Doses
     
-    func markDoseAsTaken(medicationId: UUID, scheduledTime: Date) {
+    func markDoseAsTaken(medicationId: UUID, scheduledTime: Date, takenTime: Date = Date()) {
         let log = DoseLog(
             medicationId: medicationId,
             scheduledTime: scheduledTime,
-            takenTime: Date(),
+            takenTime: takenTime,
             status: .taken
         )
         

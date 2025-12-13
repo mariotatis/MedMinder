@@ -140,6 +140,7 @@ struct AddTreatmentView: View {
             }
             .onAppear {
                 viewModel.fetchProfiles()
+                viewModel.fetchDoseLogs()
                 if viewModel.isEditing, let treatmentId = viewModel.editingTreatmentId {
                     viewModel.fetchMedications(for: treatmentId)
                     
