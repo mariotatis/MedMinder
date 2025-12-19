@@ -5,59 +5,93 @@ struct MedMinderApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var container = AppContainer()
     @State private var selectedTab = 0
+    
+    @AppStorage("hasOnboarded") var hasOnboarded: Bool = false
+    @State private var showAddProfileSheet = false
+    @State private var showSplash = true
 
     var body: some Scene {
         WindowGroup {
-            TabView(selection: $selectedTab) {
-                HomeView(
-                    viewModel: HomeViewModel(
-                        medicationUseCases: container.medicationUseCases,
-                        profileUseCases: container.profileUseCases,
-                        treatmentUseCases: container.treatmentUseCases
-                    )
-                )
-                .tabItem {
-                    Label("Upcoming", systemImage: "pill.fill")
+            ZStack {
+                if showSplash {
+                    SplashView {
+                        withAnimation {
+                            showSplash = false
+                        }
+                    }
+                    .transition(.opacity)
+                    .zIndex(1) // Ensure it stays on top during transition
+                } else if !hasOnboarded {
+                    OnboardingView(isOnboardingCompleted: $hasOnboarded) {
+                        showAddProfileSheet = true
+                    }
+                    .transition(.opacity)
+                } else {
+                    mainAppContent
+                        .transition(.opacity)
                 }
-                .tag(0)
-                
-                TreatmentListView(
-                    viewModel: TreatmentListViewModel(
-                        treatmentUseCases: container.treatmentUseCases,
-                        profileUseCases: container.profileUseCases,
-                        medicationUseCases: container.medicationUseCases
-                    ),
-                    treatmentUseCases: container.treatmentUseCases,
-                    profileUseCases: container.profileUseCases,
-                    medicationUseCases: container.medicationUseCases
-                )
-                .tabItem {
-                    Label("Treatments", systemImage: "list.clipboard.fill")
-                }
-                .tag(1)
-                
-                ProfileListView(
-                    viewModel: ProfileListViewModel(profileUseCases: container.profileUseCases),
-                    profileUseCases: container.profileUseCases,
-                    treatmentUseCases: container.treatmentUseCases,
-                    medicationUseCases: container.medicationUseCases
-                )
-                .tabItem {
-                    Label("Family", systemImage: "person.2.fill")
-                }
-                .tag(2)
-                
-                SettingsView()
-                .tabItem {
-                    Label("More", systemImage: "ellipsis")
-                }
-                .tag(3)
-                
             }
-            .accentColor(.primaryAction)
-            //.preferredColorScheme(.dark) // Force dark mode as per design
-            .onAppear {
-                container.syncReminders()
+        }
+    }
+    
+    var mainAppContent: some View {
+        TabView(selection: $selectedTab) {
+            HomeView(
+                viewModel: HomeViewModel(
+                    medicationUseCases: container.medicationUseCases,
+                    profileUseCases: container.profileUseCases,
+                    treatmentUseCases: container.treatmentUseCases
+                )
+            )
+            .tabItem {
+                Label("Upcoming", systemImage: "pill.fill")
+            }
+            .tag(0)
+            
+            TreatmentListView(
+                viewModel: TreatmentListViewModel(
+                    treatmentUseCases: container.treatmentUseCases,
+                    profileUseCases: container.profileUseCases,
+                    medicationUseCases: container.medicationUseCases
+                ),
+                treatmentUseCases: container.treatmentUseCases,
+                profileUseCases: container.profileUseCases,
+                medicationUseCases: container.medicationUseCases
+            )
+            .tabItem {
+                Label("Treatments", systemImage: "list.clipboard.fill")
+            }
+            .tag(1)
+            
+            ProfileListView(
+                viewModel: ProfileListViewModel(profileUseCases: container.profileUseCases),
+                profileUseCases: container.profileUseCases,
+                treatmentUseCases: container.treatmentUseCases,
+                medicationUseCases: container.medicationUseCases
+            )
+            .tabItem {
+                Label("Family", systemImage: "person.2.fill")
+            }
+            .tag(2)
+            
+            SettingsView()
+            .tabItem {
+                Label("More", systemImage: "ellipsis")
+            }
+            .tag(3)
+            
+        }
+        .accentColor(.primaryAction)
+        //.preferredColorScheme(.dark) // Force dark mode as per design
+        .onAppear {
+            container.syncReminders()
+        }
+        .sheet(isPresented: $showAddProfileSheet) {
+            NavigationView {
+                AddProfileView(
+                    viewModel: AddProfileViewModel(profileUseCases: container.profileUseCases),
+                    isOnboarding: true
+                )
             }
         }
     }

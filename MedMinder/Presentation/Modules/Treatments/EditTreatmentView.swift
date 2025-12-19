@@ -66,7 +66,7 @@ struct EditTreatmentView: View {
                                             }
                                         }
                                     ),
-                                    hideCloseButton: true
+                                    showCloseButton: false
                                 )) {
                                     VStack {
                                         Circle()

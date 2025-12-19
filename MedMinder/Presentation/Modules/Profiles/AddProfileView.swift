@@ -6,7 +6,8 @@ struct AddProfileView: View {
     @State private var showImagePicker = false
     @State private var showCropper = false
     @State private var showDeleteConfirmation = false
-    var hideCloseButton: Bool = false
+    var isOnboarding: Bool = false
+    var showCloseButton: Bool = true
     
     var body: some View {
         ZStack {
@@ -80,12 +81,21 @@ struct AddProfileView: View {
         }
         .navigationTitle(viewModel.isEditing ? "Edit Profile" : "Add Profile")
         .navigationBarTitleDisplayMode(.inline)
+
+    // ... (rest of body)
+
+    // toolbar logic:
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                if !hideCloseButton {
+                if isOnboarding {
+                    Button(action: { presentationMode.wrappedValue.dismiss() }) {
+                        Text("Skip")
+                            .foregroundColor(.gray)
+                    }
+                } else if showCloseButton {
                     Button(action: { presentationMode.wrappedValue.dismiss() }) {
                         Image(systemName: "xmark")
-                            .foregroundColor(.gray) // User requested grey
+                            .foregroundColor(.gray)
                     }
                 }
             }
@@ -93,7 +103,7 @@ struct AddProfileView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: viewModel.saveProfile) {
                     Text("Save")
-                    .foregroundColor(.primaryAction)
+                        .foregroundColor(.primaryAction)
                 }
             }
         }

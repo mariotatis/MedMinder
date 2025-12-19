@@ -207,7 +207,10 @@ struct AddTreatmentView: View {
                         }
                     }
                     
-                    NavigationLink(destination: AddProfileView(viewModel: AddProfileViewModel(profileUseCases: viewModel.profileUseCases))) {
+                    NavigationLink(destination: AddProfileView(
+                        viewModel: AddProfileViewModel(profileUseCases: viewModel.profileUseCases),
+                        showCloseButton: false
+                    )) {
                         VStack {
                             Circle()
                                 .fill(Color.surface)
@@ -234,15 +237,13 @@ struct AddTreatmentView: View {
                     .fontWeight(.bold)
                     .foregroundColor(.textPrimary)
                 Spacer()
-                if !viewModel.medications.isEmpty {
-                    Button(action: {
-                        viewModel.editingMedication = nil
-                        viewModel.showAddMedication = true
-                    }) {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title)
-                            .foregroundColor(.primaryAction)
-                    }
+                Button(action: {
+                    viewModel.editingMedication = nil
+                    viewModel.showAddMedication = true
+                }) {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.title)
+                        .foregroundColor(.primaryAction)
                 }
             }
             
