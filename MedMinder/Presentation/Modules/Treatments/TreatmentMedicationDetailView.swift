@@ -117,6 +117,32 @@ struct TreatmentMedicationDetailView: View {
                         .padding(.vertical, 4)
                         .background(Color.gray)
                         .cornerRadius(8)
+                } else if viewModel.medication.durationDays > 0 {
+                    let startDate = viewModel.medication.initialTime
+                    let totalDuration = Double(viewModel.medication.durationDays) * 24 * 60 * 60
+                    let elapsed = Date().timeIntervalSince(startDate)
+                    let progress = min(max(elapsed / totalDuration, 0), 1)
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        GeometryReader { geometry in
+                            ZStack(alignment: .leading) {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(Color.gray.opacity(0.3)) // Darker background track
+                                    .frame(height: 6)
+                                
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(Color(hex: viewModel.medication.color.darkHex))
+                                    .frame(width: geometry.size.width * CGFloat(progress), height: 6)
+                            }
+                        }
+                        .frame(height: 6)
+                        
+                        Text("\(Int(progress * 100))% Completed")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.textSecondary)
+                    }
+                    .padding(.top, 4)
                 }
             }
             

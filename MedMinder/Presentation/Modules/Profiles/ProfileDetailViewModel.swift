@@ -121,4 +121,30 @@ class ProfileDetailViewModel: ObservableObject {
         
         return allMedsCompleted
     }
+    
+    func getTreatmentProgress(for treatmentId: UUID) -> Double? {
+        guard let treatment = treatments.first(where: { $0.id == treatmentId }) else { return nil }
+        
+        let treatmentMeds = medications.filter { $0.treatmentId == treatmentId }
+        guard !treatmentMeds.isEmpty else { return 0 }
+        
+        if treatmentMeds.contains(where: { $0.durationDays <= 0 }) {
+            return nil
+        }
+        
+        var maxEndDate: Date = treatment.startDate
+        
+        for med in treatmentMeds {
+            let medEndDate = Calendar.current.date(byAdding: .day, value: med.durationDays, to: med.initialTime) ?? med.initialTime
+            if medEndDate > maxEndDate {
+                maxEndDate = medEndDate
+            }
+        }
+        
+        let totalDuration = maxEndDate.timeIntervalSince(treatment.startDate)
+        guard totalDuration > 0 else { return 0 }
+        
+        let elapsed = Date().timeIntervalSince(treatment.startDate)
+        return min(max(elapsed / totalDuration, 0), 1)
+    }
 }

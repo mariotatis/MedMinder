@@ -20,15 +20,40 @@ class AddTreatmentViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     var editingTreatmentId: UUID?
+    var preselectedProfileId: UUID?
     
     var isEditing: Bool {
         return editingTreatmentId != nil
     }
     
-    init(treatmentUseCases: TreatmentUseCases, profileUseCases: ProfileUseCases, medicationUseCases: MedicationUseCases, treatment: Treatment? = nil) {
+    var computedProgress: Double? {
+        guard !medications.isEmpty else { return 0 }
+        
+        if medications.contains(where: { $0.durationDays <= 0 }) {
+            return nil
+        }
+        
+        var maxEndDate: Date = startDate
+        
+        for med in medications {
+            let medEndDate = Calendar.current.date(byAdding: .day, value: med.durationDays, to: med.initialTime) ?? med.initialTime
+            if medEndDate > maxEndDate {
+                maxEndDate = medEndDate
+            }
+        }
+        
+        let totalDuration = maxEndDate.timeIntervalSince(startDate)
+        guard totalDuration > 0 else { return 0 }
+        
+        let elapsed = Date().timeIntervalSince(startDate)
+        return min(max(elapsed / totalDuration, 0), 1)
+    }
+    
+    init(treatmentUseCases: TreatmentUseCases, profileUseCases: ProfileUseCases, medicationUseCases: MedicationUseCases, treatment: Treatment? = nil, preselectedProfileId: UUID? = nil) {
         self.treatmentUseCases = treatmentUseCases
         self.profileUseCases = profileUseCases
         self.medicationUseCases = medicationUseCases
+        self.preselectedProfileId = preselectedProfileId
         
         if let treatment = treatment {
             self.name = treatment.name
@@ -36,6 +61,8 @@ class AddTreatmentViewModel: ObservableObject {
             self.startDate = treatment.startDate
             self.editingTreatmentId = treatment.id
             fetchMedications(for: treatment.id)
+        } else if let preselectedId = preselectedProfileId {
+            self.selectedProfileId = preselectedId
         }
         
         fetchProfiles()

@@ -56,7 +56,8 @@ struct TreatmentListView: View {
                                         profile: viewModel.getProfile(for: treatment.profileId),
                                         medicationCount: viewModel.getMedicationCount(for: treatment.id),
                                         isCompleted: viewModel.isTreatmentCompleted(treatment.id),
-                                        showChevron: true
+                                        showChevron: true,
+                                        progress: viewModel.getTreatmentProgress(for: treatment.id)
                                     )
                                  }
                                 .buttonStyle(PlainButtonStyle())

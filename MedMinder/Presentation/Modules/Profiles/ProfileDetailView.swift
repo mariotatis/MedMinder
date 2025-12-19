@@ -78,7 +78,8 @@ struct ProfileDetailView: View {
                                             medicationCount: viewModel.getMedicationCount(for: treatment.id),
                                             isCompleted: viewModel.isTreatmentCompleted(treatment.id),
                                             showChevron: true,
-                                            showProfileInfo: false
+                                            showProfileInfo: false,
+                                            progress: viewModel.getTreatmentProgress(for: treatment.id)
                                         )
                                     }
                                     .buttonStyle(PlainButtonStyle())
@@ -105,7 +106,8 @@ struct ProfileDetailView: View {
                 AddTreatmentView(viewModel: AddTreatmentViewModel(
                     treatmentUseCases: viewModel.treatmentUseCases,
                     profileUseCases: viewModel.profileUseCases,
-                    medicationUseCases: viewModel.medicationUseCases
+                    medicationUseCases: viewModel.medicationUseCases,
+                    preselectedProfileId: viewModel.profile.id
                 ))
             }
             .onDisappear {

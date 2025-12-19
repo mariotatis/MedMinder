@@ -7,6 +7,7 @@ struct TreatmentCard: View {
     var isCompleted: Bool = false
     var showChevron: Bool = false
     var showProfileInfo: Bool = true
+    var progress: Double? = nil
     
     var body: some View {
         HStack(spacing: 16) {
@@ -42,6 +43,35 @@ struct TreatmentCard: View {
                     }
                 }
                 
+                if !isCompleted, let progressValue = progress ?? (treatment.endDate.map { endDate in
+                    let totalDuration = endDate.timeIntervalSince(treatment.startDate)
+                    guard totalDuration > 0 else { return 0.0 }
+                    let elapsed = Date().timeIntervalSince(treatment.startDate)
+                    return min(max(elapsed / totalDuration, 0), 1)
+                }) {
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        GeometryReader { geometry in
+                            ZStack(alignment: .leading) {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(Color.gray.opacity(0.3)) // Darker background track
+                                    .frame(height: 6)
+                                
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(Color.primaryAction)
+                                    .frame(width: geometry.size.width * CGFloat(progressValue), height: 6)
+                            }
+                        }
+                        .frame(height: 6)
+                        
+                        Text("\(Int(progressValue * 100))% Completed")
+                            .font(.caption) // Larger font
+                            .fontWeight(.medium)
+                            .foregroundColor(.textSecondary)
+                    }
+                    .padding(.top, 4)
+                }
+
                 Text("Started: ")
                     .font(.subheadline)
                     .fontWeight(.bold)

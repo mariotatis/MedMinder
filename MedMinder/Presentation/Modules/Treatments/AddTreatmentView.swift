@@ -11,30 +11,33 @@ struct AddTreatmentView: View {
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    if viewModel.isEditing, let treatmentId = viewModel.editingTreatmentId {
-                        // Details View Mode: Show Card
-                        let displayTreatment = Treatment(
-                            id: treatmentId,
-                            name: viewModel.name,
-                            startDate: viewModel.startDate,
-                            endDate: nil,
-                            profileId: viewModel.selectedProfileId
-                        )
-                        
-                        let profile = viewModel.profiles.first(where: { $0.id == viewModel.selectedProfileId })
-                        
-                        TreatmentCard(
-                            treatment: displayTreatment,
-                            profile: profile,
-                            medicationCount: viewModel.medications.count,
-                            isCompleted: viewModel.isCompleted
-                        )
-                    } else {
-                        // Add Mode: Show Form
-                        CustomTextField(title: "Treatment Name", placeholder: "e.g. Post-Surgery Recovery", text: $viewModel.name)
-                        
+                if viewModel.isEditing, let treatmentId = viewModel.editingTreatmentId {
+                    // Details View Mode: Show Card
+                    let displayTreatment = Treatment(
+                        id: treatmentId,
+                        name: viewModel.name,
+                        startDate: viewModel.startDate,
+                        endDate: nil,
+                        profileId: viewModel.selectedProfileId
+                    )
+                    
+                    let profile = viewModel.profiles.first(where: { $0.id == viewModel.selectedProfileId })
+                    
+                    TreatmentCard(
+                        treatment: displayTreatment,
+                        profile: profile,
+                        medicationCount: viewModel.medications.count,
+                        isCompleted: viewModel.isCompleted,
+                        progress: viewModel.computedProgress
+                    )
+                } else {
+                    // Add Mode: Show Form
+                    CustomTextField(title: "Treatment Name", placeholder: "e.g. Post-Surgery Recovery", text: $viewModel.name)
+                    
+                    if viewModel.preselectedProfileId == nil {
                         profileSelectionView
                     }
+                }
                     
                     if viewModel.isEditing, let treatmentId = viewModel.editingTreatmentId {
                         NavigationLink(destination: TreatmentDosageRegistryView(
@@ -82,7 +85,10 @@ struct AddTreatmentView: View {
                 }
                 .padding()
             }
-            .navigationTitle(viewModel.isEditing ? "Treatment Details" : "New Treatment")
+            .navigationTitle(
+                viewModel.isEditing ? "Treatment Details" : 
+                (viewModel.preselectedProfileId != nil ? "For \(viewModel.profiles.first(where: { $0.id == viewModel.preselectedProfileId })?.name ?? "Profile")" : "New Treatment")
+            )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -324,6 +330,35 @@ struct AddTreatmentView: View {
                                     Text("Upcoming Doses: \(status.upcomingCount)")
                                         .font(.caption2)
                                         .foregroundColor(.primaryAction)
+                                }
+                                
+                                if medication.durationDays > 0 && !status.isCompleted {
+                                    let startDate = medication.initialTime
+                                    let totalDuration = Double(medication.durationDays) * 24 * 60 * 60
+                                    let elapsed = Date().timeIntervalSince(startDate)
+                                    let progress = min(max(elapsed / totalDuration, 0), 1)
+                                    
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        GeometryReader { geometry in
+                                            ZStack(alignment: .leading) {
+                                                RoundedRectangle(cornerRadius: 2)
+                                                    .fill(Color.gray.opacity(0.3)) // Darker background track
+                                                    .frame(height: 4)
+                                                
+                                                RoundedRectangle(cornerRadius: 2)
+                                                    .fill(Color(hex: medication.color.darkHex))
+                                                    .frame(width: geometry.size.width * CGFloat(progress), height: 4)
+                                            }
+                                        }
+                                        .frame(height: 4)
+                                        
+                                        Text("\(Int(progress * 100))% Completed")
+                                            .font(.caption) // Larger font
+                                            .fontWeight(.medium)
+                                            .foregroundColor(.textSecondary)
+                                            .scaleEffect(0.8, anchor: .leading)
+                                    }
+                                    .padding(.top, 2)
                                 }
                             }
                             Spacer()
