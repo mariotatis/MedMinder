@@ -11,6 +11,7 @@ class AppContainer: ObservableObject {
     let treatmentUseCases: TreatmentUseCases
     let medicationUseCases: MedicationUseCases
     let notificationService: NotificationService
+    let themeManager = ThemeManager.shared
     
     init() {
         // Initialize Repositories

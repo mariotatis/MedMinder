@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @EnvironmentObject var themeManager: ThemeManager
     @State private var currentQuote: String = HealthQuotes.random()
     @AppStorage("areRemindersEnabled") private var areRemindersEnabled = false
     
@@ -92,6 +93,38 @@ struct SettingsView: View {
                                 .padding(.leading, 52)
                             
                             SettingsLinkRow(title: "MedMinder Pro", icon: "star.fill", iconColor: .yellow)
+                        }
+                        .background(Color.surface)
+                        .cornerRadius(16)
+                        .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+                        
+                        // Appearance
+                        VStack(spacing: 0) {
+                             HStack {
+                                 ZStack {
+                                     RoundedRectangle(cornerRadius: 8)
+                                         .fill(Color.primaryAction.opacity(0.1))
+                                         .frame(width: 32, height: 32)
+                                     
+                                     Image(systemName: "sun.max.fill")
+                                         .font(.caption)
+                                         .foregroundColor(.primaryAction)
+                                 }
+                                 
+                                 Text("Theme")
+                                     .font(.body)
+                                     .foregroundColor(.textPrimary)
+                                 
+                                 Spacer()
+                                 
+                                 Picker("Theme", selection: $themeManager.currentTheme) {
+                                     ForEach(AppTheme.allCases) { theme in
+                                         Text(theme.displayName).tag(theme)
+                                     }
+                                 }
+                                 .pickerStyle(MenuPickerStyle())
+                             }
+                             .padding()
                         }
                         .background(Color.surface)
                         .cornerRadius(16)

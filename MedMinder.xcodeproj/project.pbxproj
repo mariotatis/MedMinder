@@ -43,6 +43,7 @@
 		ACDF60D32ED65DBE003C4F41 /* ProfileDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF60D22ED65DBE003C4F41 /* ProfileDetailViewModel.swift */; };
 		ACE75E3C2EF5DD480049CFC8 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE75E3A2EF5DD480049CFC8 /* OnboardingView.swift */; };
 		ACE75E3F2EF5DE490049CFC8 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE75E3D2EF5DE490049CFC8 /* SplashView.swift */; };
+		ACE75E422EF651C80049CFC8 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE75E402EF651C80049CFC8 /* ThemeManager.swift */; };
 		ACF510E62EDF93F000B25ACD /* ProfileFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF510E52EDF93F000B25ACD /* ProfileFilterView.swift */; };
 		ACFD9ACE2ECF9290003F6E66 /* ProfileListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9ACC2ECF9290003F6E66 /* ProfileListViewModel.swift */; };
 		ACFD9AD12ED048CB003F6E66 /* TreatmentDosageRegistryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9ACF2ED048CB003F6E66 /* TreatmentDosageRegistryView.swift */; };
@@ -95,6 +96,7 @@
 		ACDF60D22ED65DBE003C4F41 /* ProfileDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailViewModel.swift; sourceTree = "<group>"; };
 		ACE75E3A2EF5DD480049CFC8 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		ACE75E3D2EF5DE490049CFC8 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		ACE75E402EF651C80049CFC8 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		ACF510E52EDF93F000B25ACD /* ProfileFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFilterView.swift; sourceTree = "<group>"; };
 		ACFD9ACB2ECF9290003F6E66 /* ProfileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListView.swift; sourceTree = "<group>"; };
 		ACFD9ACC2ECF9290003F6E66 /* ProfileListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListViewModel.swift; sourceTree = "<group>"; };
@@ -116,7 +118,7 @@
 				10E8B952E244551ED928E759 /* Components */,
 				5772AEFDC68DBBC982C63957 /* Extensions */,
 				AC830C782ED8DFB70073805A /* Constants */,
-				AC041D402EEDBFCC00944405 /* MissedDoseActionsView.swift */,
+				ACE75E412EF651C80049CFC8 /* Theme */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -195,6 +197,7 @@
 			children = (
 				3715F4D903570E68DC34404D /* Color+Extensions.swift */,
 				AC2019F12EE8DDB700CEB6B9 /* View+Extensions.swift */,
+				AC041D402EEDBFCC00944405 /* MissedDoseActionsView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -278,6 +281,14 @@
 				ACE75E3D2EF5DE490049CFC8 /* SplashView.swift */,
 			);
 			path = Splash;
+			sourceTree = "<group>";
+		};
+		ACE75E412EF651C80049CFC8 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				ACE75E402EF651C80049CFC8 /* ThemeManager.swift */,
+			);
+			path = Theme;
 			sourceTree = "<group>";
 		};
 		B7B668F16C65896DD899A4A4 /* App */ = {
@@ -431,6 +442,7 @@
 				AC2019F22EE8DDB700CEB6B9 /* View+Extensions.swift in Sources */,
 				F87B5FE14687F762A2EC9BAD /* AddMedicationViewModel.swift in Sources */,
 				98ACDEE10546B0D756E704D0 /* AddProfileView.swift in Sources */,
+				ACE75E422EF651C80049CFC8 /* ThemeManager.swift in Sources */,
 				ACDF60CC2ED5825A003C4F41 /* TreatmentMedicationDetailView.swift in Sources */,
 				ACDF60CD2ED5825A003C4F41 /* TreatmentMedicationDetailViewModel.swift in Sources */,
 				ACDF60D32ED65DBE003C4F41 /* ProfileDetailViewModel.swift in Sources */,

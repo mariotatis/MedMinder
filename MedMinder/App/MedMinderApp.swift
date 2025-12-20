@@ -2,8 +2,9 @@ import SwiftUI
 
 @main
 struct MedMinderApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+@UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var container = AppContainer()
+    @StateObject private var themeManager = ThemeManager.shared
     @State private var selectedTab = 0
     
     @AppStorage("hasOnboarded") var hasOnboarded: Bool = false
@@ -82,7 +83,9 @@ struct MedMinderApp: App {
             
         }
         .accentColor(.primaryAction)
-        //.preferredColorScheme(.dark) // Force dark mode as per design
+        .accentColor(.primaryAction)
+        .preferredColorScheme(themeManager.currentTheme == .system ? nil : (themeManager.currentTheme == .dark ? .dark : .light))
+        .environmentObject(themeManager)
         .onAppear {
             container.syncReminders()
         }
