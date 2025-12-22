@@ -320,7 +320,7 @@ struct HomeView: View {
             .onAppear {
                 viewModel.fetchData()
             }
-            .onChange(of: showAddTreatment) { isPresented in
+            .onChange(of: showAddTreatment) { oldValue, isPresented in
                 if !isPresented {
                     viewModel.fetchData()
                 }

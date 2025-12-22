@@ -205,9 +205,9 @@ Centralized logic for status reporting.
 
 The app controls when "Mark as Taken" and "Mark as Skipped" buttons appear to ensure data integrity.
 
-- **Lead Time (4 Hours)**: Action buttons appear **4 hours before** the `scheduledTime`. This allows users to log doses they take slightly ahead of schedule.
+- **Lead Time (Customizable)**: Users can select a lead time window (from 30 minutes to 4 hours) in Settings. Action buttons appear before the `scheduledTime` based on this selection. This allows users to log doses they take slightly ahead of schedule.
 - **Lag Time (24 Hours)**: Action buttons remain visible for **24 hours after** the `scheduledTime`. This provides a "grace period" for logging forgotten doses before they are considered fully missed.
-- **Logic Location**: This is centralized in the `isWithinActionWindow` property within `HomeViewModel.MedicationDose` and `TreatmentMedicationDetailViewModel`.
+- **Logic Location**: This is centralized in the `isWithinActionWindow` property within `HomeViewModel.MedicationDose` and `TreatmentMedicationDetailViewModel`, referencing `@AppStorage("actionWindowHours")`.
 
 ---
 

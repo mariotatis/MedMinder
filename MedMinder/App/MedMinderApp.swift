@@ -75,7 +75,7 @@ struct MedMinderApp: App {
             }
             .tag(2)
             
-            SettingsView()
+            SettingsView(medicationUseCases: container.medicationUseCases)
             .tabItem {
                 Label("More", systemImage: "ellipsis")
             }

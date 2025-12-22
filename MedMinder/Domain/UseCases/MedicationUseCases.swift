@@ -70,6 +70,14 @@ class MedicationUseCases {
             .eraseToAnyPublisher()
     }
     
+    func rescheduleAllReminders() {
+        _ = getMedications()
+            .first()
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] medications in
+                self?.notificationService.rescheduleAll(medications: medications)
+            })
+    }
+    
     // Helper to get medications for a specific date (next 24h logic can be here or in ViewModel)
     // For now, we'll keep it simple and filter in ViewModel or add a specific UseCase later.
 }

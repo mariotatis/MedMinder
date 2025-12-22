@@ -91,7 +91,7 @@ struct TreatmentListView: View {
             .onAppear {
                 viewModel.fetchTreatments()
             }
-            .onChange(of: showAddTreatment) { isPresented in
+            .onChange(of: showAddTreatment) { oldValue, isPresented in
                 if !isPresented {
                     viewModel.fetchTreatments()
                 }

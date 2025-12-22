@@ -29,10 +29,7 @@ class AppContainer: ObservableObject {
     func syncReminders() {
         // Only sync if reminders are enabled
         if UserDefaults.standard.bool(forKey: "areRemindersEnabled") {
-            _ = medicationUseCases.getMedications()
-                .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] medications in
-                    self?.notificationService.rescheduleAll(medications: medications)
-                })
+            medicationUseCases.rescheduleAllReminders()
         }
     }
 }

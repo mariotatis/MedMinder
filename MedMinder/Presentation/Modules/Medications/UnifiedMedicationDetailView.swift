@@ -58,7 +58,7 @@ struct UnifiedMedicationDetailView: View {
                 ))
             }
         }
-        .onChange(of: showEditMedication) { isPresented in
+        .onChange(of: showEditMedication) { oldValue, isPresented in
             if !isPresented {
                 viewModel.refreshData()
             }

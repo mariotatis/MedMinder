@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import SwiftUI
 
 class HomeViewModel: ObservableObject {
     @Published var todaySections: [HomeSection] = []
@@ -16,6 +17,7 @@ class HomeViewModel: ObservableObject {
     let profileUseCases: ProfileUseCases
     let treatmentUseCases: TreatmentUseCases
     private var cancellables = Set<AnyCancellable>()
+    @AppStorage("actionWindowHours") private var actionWindowHours: Double = 4.0
     
     // Cache
     private var medications: [Medication] = []
@@ -147,7 +149,15 @@ class HomeViewModel: ObservableObject {
                     
                     if !isLogged {
                         let isTaken = doseLog?.status == .taken
-                        doses.append(MedicationDose(id: UUID(), medication: med, profile: profile, treatmentName: treatment.name, scheduledTime: currentDoseTime, isTaken: isTaken))
+                        doses.append(MedicationDose(
+                            id: UUID(),
+                            medication: med,
+                            profile: profile,
+                            treatmentName: treatment.name,
+                            scheduledTime: currentDoseTime,
+                            isTaken: isTaken,
+                            actionWindowHours: actionWindowHours
+                        ))
                     }
                     
                     currentDoseTime.addTimeInterval(frequencySeconds)
@@ -270,11 +280,13 @@ struct MedicationDose: Identifiable {
     let treatmentName: String
     let scheduledTime: Date
     let isTaken: Bool
+    let actionWindowHours: Double
     
-    // Check if dose is within 4-hour window for showing action buttons
+    // Check if dose is within custom lead time window for showing action buttons
     var isWithinActionWindow: Bool {
         let now = Date()
-        let fourHoursBeforeScheduled = scheduledTime.addingTimeInterval(-4 * 3600)
-        return now >= fourHoursBeforeScheduled && now <= scheduledTime.addingTimeInterval(24 * 3600)
+        let leadTimeSeconds = actionWindowHours * 3600
+        let leadTimeBeforeScheduled = scheduledTime.addingTimeInterval(-leadTimeSeconds)
+        return now >= leadTimeBeforeScheduled && now <= scheduledTime.addingTimeInterval(24 * 3600)
     }
 }

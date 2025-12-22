@@ -72,19 +72,11 @@ struct TreatmentCard: View {
                     .padding(.top, 4)
                 }
 
-                Text("Started: ")
-                    .font(.subheadline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.textSecondary)
-                + Text("\(treatment.startDate, style: .date)")
+                Text("Started: \(treatment.startDate, style: .date)")
                     .font(.subheadline)
                     .foregroundColor(.textSecondary)
                 
-                Text("Medications: ")
-                    .font(.subheadline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.textSecondary)
-                + Text("\(medicationCount)")
+                Text("Medications: \(medicationCount)")
                     .font(.subheadline)
                     .foregroundColor(.textSecondary)
             }

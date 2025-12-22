@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import SwiftUI
 
 class TreatmentMedicationDetailViewModel: ObservableObject {
     @Published var medication: Medication
@@ -13,13 +14,15 @@ class TreatmentMedicationDetailViewModel: ObservableObject {
     @Published var currentDoseTime: Date = Date() // Time picker for marking doses
     @Published var showTimeChangeConfirmation: Bool = false
     @Published var isDoseLogged: Bool = false
+    @AppStorage("actionWindowHours") private var actionWindowHours: Double = 4.0
     
     var isWithinActionWindow: Bool {
         guard let nextDose = upcomingDoses.first else { return false }
         let now = Date()
-        let fourHoursBeforeScheduled = nextDose.addingTimeInterval(-4 * 3600)
-        // Allow actions from 4 hours before until 24 hours after
-        return now >= fourHoursBeforeScheduled && now <= nextDose.addingTimeInterval(24 * 3600)
+        let leadTimeSeconds = actionWindowHours * 3600
+        let leadTimeBeforeScheduled = nextDose.addingTimeInterval(-leadTimeSeconds)
+        // Allow actions from custom lead time before until 24 hours after
+        return now >= leadTimeBeforeScheduled && now <= nextDose.addingTimeInterval(24 * 3600)
     }
     
     let medicationUseCases: MedicationUseCases

@@ -2,8 +2,10 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var themeManager: ThemeManager
+    let medicationUseCases: MedicationUseCases
     @State private var currentQuote: String = HealthQuotes.random()
     @AppStorage("areRemindersEnabled") private var areRemindersEnabled = false
+    @AppStorage("actionWindowHours") private var actionWindowHours = 4.0 // Default to 4 hours
     
     var body: some View {
         NavigationView {
@@ -57,25 +59,11 @@ struct SettingsView: View {
                                 
                                 Toggle("", isOn: $areRemindersEnabled)
                                     .labelsHidden()
-                                    .onChange(of: areRemindersEnabled) { enabled in
+                                    .onChange(of: areRemindersEnabled) { oldValue, enabled in
                                         if enabled {
                                             NotificationService.shared.requestAuthorization { granted in
                                                 if granted {
-                                                    // Schedule for all medications
-                                                    // We need access to medications here.
-                                                    // For now, let's assume the UseCases will handle it on next edit/add,
-                                                    // OR we should trigger a reschedule.
-                                                    // Ideally, we inject ViewModel or UseCase here.
-                                                    // For this task, let's just enable the flag.
-                                                    // The requirement says "when turned on... it should trigger".
-                                                    // So we should probably reschedule all.
-                                                    // Let's use a simple notification center post or similar if we don't have the VM.
-                                                    // Or better, let's just rely on the flag for FUTURE updates,
-                                                    // and maybe try to reschedule if we can.
-                                                    
-                                                    // Since SettingsView doesn't have the VM, we can't easily fetch all meds.
-                                                    // Let's leave it as "enabled for future" or "enabled for next app launch sync".
-                                                    // But to be "correct", we should probably fetch.
+                                                    medicationUseCases.rescheduleAllReminders()
                                                 } else {
                                                     DispatchQueue.main.async {
                                                         areRemindersEnabled = false
@@ -121,6 +109,45 @@ struct SettingsView: View {
                                      ForEach(AppTheme.allCases) { theme in
                                          Text(theme.displayName).tag(theme)
                                      }
+                                 }
+                                 .pickerStyle(MenuPickerStyle())
+                             }
+                             .padding()
+                        }
+                        .background(Color.surface)
+                        .cornerRadius(16)
+                        .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+                        
+                        // Action Window
+                        VStack(spacing: 0) {
+                             HStack {
+                                 ZStack {
+                                     RoundedRectangle(cornerRadius: 8)
+                                         .fill(Color.orange.opacity(0.1))
+                                         .frame(width: 32, height: 32)
+                                     
+                                     Image(systemName: "clock.badge.checkmark.fill")
+                                         .font(.caption)
+                                         .foregroundColor(.orange)
+                                 }
+                                 
+                                 VStack(alignment: .leading, spacing: 2) {
+                                     Text("Action Window")
+                                         .font(.body)
+                                         .foregroundColor(.textPrimary)
+                                     Text("Show actions before dose")
+                                         .font(.caption2)
+                                         .foregroundColor(.textSecondary)
+                                 }
+                                 
+                                 Spacer()
+                                 
+                                 Picker("Hours", selection: $actionWindowHours) {
+                                     Text("30 min").tag(0.5)
+                                     Text("1 hour").tag(1.0)
+                                     Text("2 hours").tag(2.0)
+                                     Text("3 hours").tag(3.0)
+                                     Text("4 hours").tag(4.0)
                                  }
                                  .pickerStyle(MenuPickerStyle())
                              }
