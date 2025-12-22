@@ -46,6 +46,7 @@
 		A7FD826552997DEC83302A9F /* MedicationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D13D1AC35F2E0A054577456 /* MedicationHeaderView.swift */; };
 		AA0FFA7ADDCB84D31C4203F3 /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08377973F9951133FC385721 /* AppContainer.swift */; };
 		ACB605F3A9F720FEF650CDE6 /* AddProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7A7B4B328997BFC8F74093 /* AddProfileViewModel.swift */; };
+		ACE75E522EF9E9040049CFC8 /* MedicationDiscoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE75E502EF9E9040049CFC8 /* MedicationDiscoveryService.swift */; };
 		AF46808DBA0668F685C28D2D /* AddTreatmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A1416F51414982D72F6036 /* AddTreatmentViewModel.swift */; };
 		B5B6AC3D77E6A861137C50E1 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC9FB4C3A6101FCC5AE59BC /* OnboardingView.swift */; };
 		B911E910229DD333513E2DE6 /* review.csv in Resources */ = {isa = PBXBuildFile; fileRef = D1E5214B454B6140E0DEA925 /* review.csv */; };
@@ -108,6 +109,7 @@
 		9C4EB717574503CD8F8B3DBA /* MedicationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDetailView.swift; sourceTree = "<group>"; };
 		AA085B229496535444D992B5 /* ProfileFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFilterView.swift; sourceTree = "<group>"; };
 		AA1297DEB3ACC7C991ED3106 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		ACE75E502EF9E9040049CFC8 /* MedicationDiscoveryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDiscoveryService.swift; sourceTree = "<group>"; };
 		B4679363D8A4FB917B9DFEC9 /* TreatmentDosageRegistryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreatmentDosageRegistryViewModel.swift; sourceTree = "<group>"; };
 		BD2C421437F4FDDF9900D4B8 /* FileStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageService.swift; sourceTree = "<group>"; };
 		C20B5298C77B3C08AE7E1ECA /* DoseLogRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoseLogRow.swift; sourceTree = "<group>"; };
@@ -300,6 +302,14 @@
 			path = Profiles;
 			sourceTree = "<group>";
 		};
+		ACE75E512EF9E9040049CFC8 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				ACE75E502EF9E9040049CFC8 /* MedicationDiscoveryService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		B7B668F16C65896DD899A4A4 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -314,6 +324,7 @@
 			children = (
 				C76EFA4B6758CAF0885D826B /* DataSources */,
 				32E7292E9BA46EEC6C421064 /* Repositories */,
+				ACE75E512EF9E9040049CFC8 /* Services */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -505,6 +516,7 @@
 				77D78C42E3FAF237FEB5B9B5 /* Treatment.swift in Sources */,
 				220CF7F9ECFF124A89DD683C /* TreatmentCard.swift in Sources */,
 				ECB181DCBEDE5A8896432611 /* TreatmentDosageRegistryView.swift in Sources */,
+				ACE75E522EF9E9040049CFC8 /* MedicationDiscoveryService.swift in Sources */,
 				E1298BDD80DE41322767BAEE /* TreatmentDosageRegistryViewModel.swift in Sources */,
 				97B3BF9E9EE13DFDFF52358F /* TreatmentListView.swift in Sources */,
 				1448A9F623DFE0BE740C073B /* TreatmentListViewModel.swift in Sources */,
@@ -526,7 +538,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KN8V2SBC36;
+				DEVELOPMENT_TEAM = DG44JXF5G2;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = MedMinder/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -609,7 +621,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KN8V2SBC36;
+				DEVELOPMENT_TEAM = DG44JXF5G2;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = MedMinder/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -135,7 +135,7 @@ struct SettingsView: View {
                                      Text("Medication Lead Time")
                                          .font(.body)
                                          .foregroundColor(.textPrimary)
-                                     Text("Show Taken/Skipped action before dose schduled time")
+                                     Text("Show actions before schduled time")
                                          .font(.caption2)
                                          .foregroundColor(.textSecondary)
                                  }

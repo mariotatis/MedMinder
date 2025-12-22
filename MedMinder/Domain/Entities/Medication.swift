@@ -101,3 +101,24 @@ struct DoseLog: Identifiable, Codable, Equatable {
         self.status = status
     }
 }
+
+// MARK: - FDA API Models
+
+struct FDAMedicationResponse: Decodable {
+    let results: [FDAMedication]
+}
+
+struct FDAMedication: Decodable, Identifiable {
+    var id: String { (brand_name ?? "") + (generic_name ?? "") }
+    let generic_name: String?
+    let brand_name: String?
+}
+
+// MARK: - Extensions
+
+extension String {
+    func capitalizeFirstLetterOnly() -> String {
+        guard !self.isEmpty else { return self }
+        return self.prefix(1).uppercased() + self.dropFirst().lowercased()
+    }
+}

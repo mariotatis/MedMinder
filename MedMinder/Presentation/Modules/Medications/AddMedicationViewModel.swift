@@ -12,6 +12,11 @@ class AddMedicationViewModel: ObservableObject {
     @Published var selectedColor: MedicationColor = MedicationColor.allCases.randomElement() ?? .red
     @Published var shouldDismiss: Bool = false
     
+    // Search properties
+    @Published var searchResults: [FDAMedication] = []
+    @Published var isSearching: Bool = false
+    private var isUserSelectingResult: Bool = false
+    
     let treatmentId: UUID
     private let medicationUseCases: MedicationUseCases?
     var onSave: ((Medication) -> Void)?
@@ -29,6 +34,7 @@ class AddMedicationViewModel: ObservableObject {
         if let medication = medication {
             configure(with: medication)
         }
+        setupSearch()
     }
     
     // Init for new treatment flow (returns object)
@@ -40,6 +46,47 @@ class AddMedicationViewModel: ObservableObject {
         if let medication = medication {
             configure(with: medication)
         }
+        setupSearch()
+    }
+    
+    private func setupSearch() {
+        $name
+            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
+            .sink { [weak self] query in
+                guard let self = self else { return }
+                
+                // Don't search if we just selected a result
+                if self.isUserSelectingResult {
+                    self.isUserSelectingResult = false
+                    return
+                }
+                
+                if query.count >= 3 {
+                    self.performSearch(query: query)
+                } else {
+                    self.searchResults = []
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func performSearch(query: String) {
+        isSearching = true
+        MedicationDiscoveryService.shared.searchMedications(query: query)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] _ in
+                self?.isSearching = false
+            }, receiveValue: { [weak self] results in
+                self?.searchResults = results
+                self?.isSearching = false
+            })
+            .store(in: &cancellables)
+    }
+    
+    func selectSearchResult(_ result: FDAMedication) {
+        isUserSelectingResult = true
+        name = result.generic_name ?? result.brand_name ?? ""
+        searchResults = []
     }
     
     private func configure(with medication: Medication) {

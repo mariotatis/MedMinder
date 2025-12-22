@@ -5,6 +5,12 @@ struct AddMedicationView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var showDeleteConfirmation = false
     
+    enum Field: Hashable {
+        case name, dosage, frequency, duration
+    }
+    
+    @FocusState private var focusedField: Field?
+    
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -17,15 +23,64 @@ struct AddMedicationView: View {
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    CustomTextField(title: "Medication Name", placeholder: "Ibuprofen", text: $viewModel.name)
-                    CustomTextField(title: "Dosage", placeholder: "e.g. 500 mg", text: $viewModel.dosage)
+                    VStack(spacing: 0) {
+                        CustomFocusedTextField(title: "Medication Name", placeholder: "Ibuprofen", text: $viewModel.name, focusState: $focusedField, focusValue: Field.name)
+                            .onSubmit {
+                                viewModel.searchResults = []
+                                focusedField = .dosage
+                            }
+                        
+                        if !viewModel.searchResults.isEmpty {
+                            VStack(alignment: .leading, spacing: 0) {
+                                ScrollView {
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        ForEach(viewModel.searchResults) { result in
+                                            Button(action: {
+                                                viewModel.selectSearchResult(result)
+                                                focusedField = .dosage
+                                            }) {
+                                                VStack(alignment: .leading, spacing: 4) {
+                                                    Text(result.generic_name ?? "")
+                                                        .font(.body)
+                                                        .foregroundColor(.textPrimary)
+                                                        .multilineTextAlignment(.leading)
+                                                    Text(result.brand_name ?? "")
+                                                        .font(.subheadline) // Slightly bigger than .caption
+                                                        .foregroundColor(.textSecondary)
+                                                        .multilineTextAlignment(.leading)
+                                                }
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                .padding()
+                                                .background(Color.surface)
+                                            }
+                                            Divider()
+                                        }
+                                    }
+                                }
+                                .frame(maxHeight: 200)
+                                .background(Color.surface)
+                                .cornerRadius(8)
+                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+                                .transition(.opacity.combined(with: .move(edge: .top)))
+                            }
+                            .zIndex(1)
+                        }
+                    }
+                    
+                    CustomFocusedTextField(title: "Dosage", placeholder: "e.g. 500 mg", text: $viewModel.dosage, focusState: $focusedField, focusValue: Field.dosage)
+                        .onSubmit {
+                            focusedField = .frequency
+                        }
                     
                     // Frequency, Duration, Initial Time in one row
                     HStack(spacing: 12) {
-                        CustomTextField(title: "Freq (Hrs)", placeholder: "8", text: $viewModel.frequencyHours)
+                        CustomFocusedTextField(title: "Freq (Hrs)", placeholder: "8", text: $viewModel.frequencyHours, focusState: $focusedField, focusValue: Field.frequency)
                             .keyboardType(.numberPad)
+                            .onSubmit {
+                                focusedField = .duration
+                            }
                         
-                        CustomTextField(title: "Dur (Days)", placeholder: "14", text: $viewModel.durationDays)
+                        CustomFocusedTextField(title: "Dur (Days)", placeholder: "14", text: $viewModel.durationDays, focusState: $focusedField, focusValue: Field.duration)
                             .keyboardType(.numberPad)
                         
                         VStack(alignment: .leading, spacing: 8) {
