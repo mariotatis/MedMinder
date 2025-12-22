@@ -13,7 +13,7 @@ struct ProfileListView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.background.edgesIgnoringSafeArea(.all)
+                AppBackground()
                 
                 if viewModel.profiles.isEmpty {
                     VStack(spacing: 16) {

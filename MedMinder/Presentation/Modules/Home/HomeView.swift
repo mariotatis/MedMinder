@@ -14,7 +14,7 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.background.edgesIgnoringSafeArea(.all)
+                AppBackground()
                 
                 if viewModel.todaySections.isEmpty && viewModel.tomorrowSections.isEmpty {
                     VStack(spacing: 16) {

@@ -8,7 +8,7 @@ struct UnifiedMedicationDetailView: View {
     
     var body: some View {
         ZStack {
-            Color.background.edgesIgnoringSafeArea(.all)
+            AppBackground()
             
             ScrollView {
                 VStack(spacing: 24) {

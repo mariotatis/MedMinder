@@ -19,7 +19,7 @@ struct AddMedicationView: View {
     
     var body: some View {
         ZStack {
-            Color.background.edgesIgnoringSafeArea(.all)
+            AppBackground()
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {

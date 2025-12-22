@@ -33,7 +33,7 @@ struct OnboardingView: View {
     
     var body: some View {
         ZStack {
-            Color.background.edgesIgnoringSafeArea(.all)
+            AppBackground()
             
             VStack {
                 HStack {

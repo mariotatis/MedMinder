@@ -47,6 +47,7 @@
 		AA0FFA7ADDCB84D31C4203F3 /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08377973F9951133FC385721 /* AppContainer.swift */; };
 		ACB605F3A9F720FEF650CDE6 /* AddProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7A7B4B328997BFC8F74093 /* AddProfileViewModel.swift */; };
 		ACE75E522EF9E9040049CFC8 /* MedicationDiscoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE75E502EF9E9040049CFC8 /* MedicationDiscoveryService.swift */; };
+		ACE75E542EF9F8AA0049CFC8 /* AppBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE75E532EF9F8AA0049CFC8 /* AppBackground.swift */; };
 		AF46808DBA0668F685C28D2D /* AddTreatmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A1416F51414982D72F6036 /* AddTreatmentViewModel.swift */; };
 		B5B6AC3D77E6A861137C50E1 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC9FB4C3A6101FCC5AE59BC /* OnboardingView.swift */; };
 		B911E910229DD333513E2DE6 /* review.csv in Resources */ = {isa = PBXBuildFile; fileRef = D1E5214B454B6140E0DEA925 /* review.csv */; };
@@ -110,6 +111,7 @@
 		AA085B229496535444D992B5 /* ProfileFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFilterView.swift; sourceTree = "<group>"; };
 		AA1297DEB3ACC7C991ED3106 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		ACE75E502EF9E9040049CFC8 /* MedicationDiscoveryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDiscoveryService.swift; sourceTree = "<group>"; };
+		ACE75E532EF9F8AA0049CFC8 /* AppBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBackground.swift; sourceTree = "<group>"; };
 		B4679363D8A4FB917B9DFEC9 /* TreatmentDosageRegistryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreatmentDosageRegistryViewModel.swift; sourceTree = "<group>"; };
 		BD2C421437F4FDDF9900D4B8 /* FileStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageService.swift; sourceTree = "<group>"; };
 		C20B5298C77B3C08AE7E1ECA /* DoseLogRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoseLogRow.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				47D85E44D88B6E8E13554CB3 /* MedicationCard.swift */,
 				1A135A9083329486C4C36ED5 /* ProfileAvatar.swift */,
 				AA085B229496535444D992B5 /* ProfileFilterView.swift */,
+				ACE75E532EF9F8AA0049CFC8 /* AppBackground.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -498,6 +501,7 @@
 				9473723720DA146E14DA0D12 /* MedicationDetailViewModel.swift in Sources */,
 				A7FD826552997DEC83302A9F /* MedicationHeaderView.swift in Sources */,
 				08D2BF53C943CB231EAA363A /* MedicationUseCases.swift in Sources */,
+				ACE75E542EF9F8AA0049CFC8 /* AppBackground.swift in Sources */,
 				A7B7BFAC035CD8C54C8264F5 /* MissedDoseActionsView.swift in Sources */,
 				6FB00B1C0AFDCF2E68A2DD8B /* NotificationService.swift in Sources */,
 				B5B6AC3D77E6A861137C50E1 /* OnboardingView.swift in Sources */,

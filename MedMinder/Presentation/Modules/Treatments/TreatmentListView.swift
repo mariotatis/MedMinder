@@ -13,7 +13,7 @@ struct TreatmentListView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.background.edgesIgnoringSafeArea(.all)
+                AppBackground()
                 
                 if viewModel.treatments.isEmpty {
                     VStack(spacing: 16) {

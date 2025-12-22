@@ -10,7 +10,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.background.edgesIgnoringSafeArea(.all)
+                AppBackground()
                 
                 ScrollView {
                     VStack(spacing: 24) {

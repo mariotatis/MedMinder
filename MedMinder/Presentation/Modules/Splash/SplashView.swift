@@ -9,7 +9,7 @@ struct SplashView: View {
     
     var body: some View {
         ZStack {
-            Color.background.edgesIgnoringSafeArea(.all)
+            AppBackground()
             
             VStack(spacing: 20) {
                 Image("AppLogo")

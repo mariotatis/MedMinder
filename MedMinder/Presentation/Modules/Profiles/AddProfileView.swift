@@ -11,7 +11,7 @@ struct AddProfileView: View {
     
     var body: some View {
         ZStack {
-            Color.background.edgesIgnoringSafeArea(.all)
+            AppBackground()
             
             VStack(spacing: 32) {
                 // Avatar Placeholder
