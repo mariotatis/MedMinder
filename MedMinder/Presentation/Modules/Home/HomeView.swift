@@ -67,13 +67,12 @@ struct HomeView: View {
                                         ForEach(section.doses) { dose in
                                             if dose.isWithinActionWindow {
                                                 // Show card with action buttons (wrapped in NavigationLink)
-                                                NavigationLink(destination: MedicationDetailView(
-                                                    viewModel: MedicationDetailViewModel(
+                                                NavigationLink(destination: UnifiedMedicationDetailView(
+                                                    viewModel: TreatmentMedicationDetailViewModel(
                                                         medication: dose.medication,
-                                                        scheduledTime: dose.scheduledTime,
                                                         medicationUseCases: viewModel.medicationUseCases,
-                                                        treatmentUseCases: viewModel.treatmentUseCases,
-                                                        profileUseCases: viewModel.profileUseCases
+                                                        profileUseCases: viewModel.profileUseCases,
+                                                        treatmentUseCases: viewModel.treatmentUseCases
                                                     )
                                                 )) {
                                                     VStack(spacing: 0) {
@@ -137,13 +136,12 @@ struct HomeView: View {
                                                 .padding(.horizontal)
                                             } else {
                                                 // Show as NavigationLink (normal behavior)
-                                                NavigationLink(destination: MedicationDetailView(
-                                                    viewModel: MedicationDetailViewModel(
+                                                NavigationLink(destination: UnifiedMedicationDetailView(
+                                                    viewModel: TreatmentMedicationDetailViewModel(
                                                         medication: dose.medication,
-                                                        scheduledTime: dose.scheduledTime,
                                                         medicationUseCases: viewModel.medicationUseCases,
-                                                        treatmentUseCases: viewModel.treatmentUseCases,
-                                                        profileUseCases: viewModel.profileUseCases
+                                                        profileUseCases: viewModel.profileUseCases,
+                                                        treatmentUseCases: viewModel.treatmentUseCases
                                                     )
                                                 )) {
                                                     MedicationCard(
@@ -185,13 +183,12 @@ struct HomeView: View {
                                         ForEach(section.doses) { dose in
                                             if dose.isWithinActionWindow {
                                                 // Show card with action buttons (wrapped in NavigationLink)
-                                                NavigationLink(destination: MedicationDetailView(
-                                                    viewModel: MedicationDetailViewModel(
+                                                NavigationLink(destination: UnifiedMedicationDetailView(
+                                                    viewModel: TreatmentMedicationDetailViewModel(
                                                         medication: dose.medication,
-                                                        scheduledTime: dose.scheduledTime,
                                                         medicationUseCases: viewModel.medicationUseCases,
-                                                        treatmentUseCases: viewModel.treatmentUseCases,
-                                                        profileUseCases: viewModel.profileUseCases
+                                                        profileUseCases: viewModel.profileUseCases,
+                                                        treatmentUseCases: viewModel.treatmentUseCases
                                                     )
                                                 )) {
                                                     VStack(spacing: 0) {
@@ -255,13 +252,12 @@ struct HomeView: View {
                                                 .padding(.horizontal)
                                             } else {
                                                 // Show as NavigationLink (normal behavior)
-                                                NavigationLink(destination: MedicationDetailView(
-                                                    viewModel: MedicationDetailViewModel(
+                                                NavigationLink(destination: UnifiedMedicationDetailView(
+                                                    viewModel: TreatmentMedicationDetailViewModel(
                                                         medication: dose.medication,
-                                                        scheduledTime: dose.scheduledTime,
                                                         medicationUseCases: viewModel.medicationUseCases,
-                                                        treatmentUseCases: viewModel.treatmentUseCases,
-                                                        profileUseCases: viewModel.profileUseCases
+                                                        profileUseCases: viewModel.profileUseCases,
+                                                        treatmentUseCases: viewModel.treatmentUseCases
                                                     )
                                                 )) {
                                                     MedicationCard(

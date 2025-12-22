@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 struct AddTreatmentView: View {
     @StateObject var viewModel: AddTreatmentViewModel
@@ -288,7 +289,7 @@ struct AddTreatmentView: View {
                 )
             } else {
                 ForEach(viewModel.medications, id: \.id) { medication in
-                    NavigationLink(destination: TreatmentMedicationDetailView(
+                    NavigationLink(destination: UnifiedMedicationDetailView(
                         viewModel: TreatmentMedicationDetailViewModel(
                             medication: medication,
                             medicationUseCases: viewModel.medicationUseCases,
@@ -379,4 +380,9 @@ struct AddTreatmentView: View {
 
 struct Style {
     static let dash = StrokeStyle(lineWidth: 1, dash: [5])
+}
+
+/// A simple utility class to hold Combine cancellables within a SwiftUI View
+class CancellableHolder: ObservableObject {
+    var cancellables = Set<AnyCancellable>()
 }

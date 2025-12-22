@@ -89,29 +89,16 @@ struct TreatmentDosageRegistryView: View {
                             .padding()
                         } else {
                             ForEach(upcomingDoses) { item in
-                                HStack(alignment: .top, spacing: 12) {
-                                    Image(systemName: "clock")
-                                        .foregroundColor(.gray)
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("\(item.medication.name), \(item.medication.dosage)")
-                                            .font(.headline)
-                                            .foregroundColor(.textPrimary)
-                                        
-                                        Text("Scheduled for \(item.doseLog.scheduledTime, style: .time)")
-                                            .font(.body)
-                                            .foregroundColor(.textPrimary)
-                                        
-                                        Text(item.doseLog.scheduledTime, style: .date)
-                                            .font(.subheadline)
-                                            .foregroundColor(.textSecondary)
+                                DoseLogRow(
+                                    medication: item.medication,
+                                    log: item.doseLog,
+                                    onTaken: { takenTime in
+                                        viewModel.markDoseAsTaken(medicationId: item.medication.id, scheduledTime: item.doseLog.scheduledTime, takenTime: takenTime)
+                                    },
+                                    onSkipped: {
+                                        viewModel.markDoseAsSkipped(medicationId: item.medication.id, scheduledTime: item.doseLog.scheduledTime)
                                     }
-                                    
-                                    Spacer()
-                                }
-                                .padding()
-                                .background(Color.surface)
-                                .cornerRadius(12)
+                                )
                             }
                         }
                     } else {
@@ -126,82 +113,16 @@ struct TreatmentDosageRegistryView: View {
                             .padding()
                         } else {
                             ForEach(historyDoses) { item in
-                                VStack(alignment: .leading, spacing: 8) {
-                                    HStack(alignment: .top, spacing: 12) {
-                                        // Status Icon
-                                        if item.doseLog.status == .taken {
-                                            Image(systemName: "checkmark.circle.fill")
-                                                .foregroundColor(.green)
-                                        } else if item.doseLog.status == .skipped {
-                                            Image(systemName: "exclamationmark.circle.fill")
-                                                .foregroundColor(.orange)
-                                        } else if item.doseLog.status == .pending {
-                                            // Pending - red for missed, grey for upcoming
-                                            Image(systemName: "clock")
-                                                .foregroundColor(item.doseLog.scheduledTime < Date() ? .red : .gray)
-                                        }
-                                        
-                                        VStack(alignment: .leading, spacing: 4) {
-                                            // Medication Name and Dosage
-                                            Text("\(item.medication.name), \(item.medication.dosage)")
-                                                .font(.headline)
-                                                .foregroundColor(.textPrimary)
-                                            
-                                            // Status and Time
-                                            if let takenTime = item.doseLog.takenTime {
-                                                Text("Taken at \(takenTime, style: .time)")
-                                                    .font(.body)
-                                                    .foregroundColor(.textPrimary)
-                                            } else if item.doseLog.status == .skipped {
-                                                Text("Skipped dose at \(item.doseLog.scheduledTime, style: .time)")
-                                                    .font(.body)
-                                                    .foregroundColor(.orange)
-                                            } else if item.doseLog.status == .pending {
-                                                // Pending dose - check if missed (past) or upcoming (future)
-                                                if item.doseLog.scheduledTime < Date() {
-                                                    // Missed dose
-                                                    HStack(spacing: 4) {
-                                                        Text("Missed:")
-                                                            .font(.body)
-                                                            .fontWeight(.semibold)
-                                                            .foregroundColor(.red)
-                                                        Text("\(item.doseLog.scheduledTime, style: .time)")
-                                                            .font(.body)
-                                                            .foregroundColor(.textPrimary)
-                                                    }
-                                                } else {
-                                                    // Upcoming dose
-                                                    Text("Scheduled for \(item.doseLog.scheduledTime, style: .time)")
-                                                        .font(.body)
-                                                        .foregroundColor(.textPrimary)
-                                                }
-                                            }
-                                            
-                                            // Date
-                                            Text(item.doseLog.scheduledTime, style: .date)
-                                                .font(.subheadline)
-                                                .foregroundColor(.textSecondary)
-                                        }
-                                        
-                                        Spacer()
+                                DoseLogRow(
+                                    medication: item.medication,
+                                    log: item.doseLog,
+                                    onTaken: { takenTime in
+                                        viewModel.markDoseAsTaken(medicationId: item.medication.id, scheduledTime: item.doseLog.scheduledTime, takenTime: takenTime)
+                                    },
+                                    onSkipped: {
+                                        viewModel.markDoseAsSkipped(medicationId: item.medication.id, scheduledTime: item.doseLog.scheduledTime)
                                     }
-                                    
-                                    // Action buttons for missed doses (only show for past doses)
-                                    if item.doseLog.status == .pending && item.doseLog.scheduledTime < Date() {
-                                        MissedDoseActionsView(
-                                            scheduledTime: item.doseLog.scheduledTime,
-                                            onTaken: { takenTime in
-                                                viewModel.markDoseAsTaken(medicationId: item.medication.id, scheduledTime: item.doseLog.scheduledTime, takenTime: takenTime)
-                                            },
-                                            onSkipped: {
-                                                viewModel.markDoseAsSkipped(medicationId: item.medication.id, scheduledTime: item.doseLog.scheduledTime)
-                                            }
-                                        )
-                                    }
-                                }
-                                .padding()
-                                .background(Color.surface)
-                                .cornerRadius(12)
+                                )
                             }
                         }
                     }

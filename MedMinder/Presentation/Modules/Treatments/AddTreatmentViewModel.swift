@@ -169,8 +169,49 @@ class AddTreatmentViewModel: ObservableObject {
                 })
                 .store(in: &cancellables)
         } else {
-            medications.append(medication)
+            // Silently save treatment first, then add medication
+            autoSaveTreatment(with: medication)
         }
+    }
+    
+    private func autoSaveTreatment(with lastMedication: Medication) {
+        let treatmentId = UUID()
+        let treatmentName = name.isEmpty ? "New Treatment" : name
+        if name.isEmpty { name = treatmentName }
+        
+        let treatment = Treatment(id: treatmentId, name: treatmentName, startDate: startDate, endDate: nil, profileId: selectedProfileId)
+        
+        treatmentUseCases.addTreatment(treatment)
+            .receive(on: DispatchQueue.main)
+            .flatMap { [weak self] _ -> AnyPublisher<Void, Error> in
+                guard let self = self else {
+                    return Fail(error: NSError(domain: "AddTreatmentViewModel", code: -1)).eraseToAnyPublisher()
+                }
+                
+                // Set the ID so view switches to edit mode
+                self.editingTreatmentId = treatmentId
+                
+                // Save ALL medications currently in the local list + the new one
+                var allMedsToSave = self.medications
+                allMedsToSave.append(lastMedication)
+                
+                let publishers = allMedsToSave.map { med -> AnyPublisher<Void, Error> in
+                    var m = med
+                    m.treatmentId = treatmentId
+                    return self.medicationUseCases.addMedication(m)
+                }
+                
+                return Publishers.MergeMany(publishers)
+                    .collect()
+                    .map { _ in () }
+                    .eraseToAnyPublisher()
+            }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
+                self?.fetchMedications(for: treatmentId)
+                self?.fetchDoseLogs()
+            })
+            .store(in: &cancellables)
     }
     
     func updateMedication(_ medication: Medication) {
@@ -205,18 +246,18 @@ class AddTreatmentViewModel: ObservableObject {
         let profileId = selectedProfileId
         
         if let id = editingTreatmentId {
-            // Update existing treatment
-            // Medications are auto-saved in this mode, so we only update the treatment details
+            // Update existing treatment details
             let treatment = Treatment(id: id, name: name, startDate: startDate, endDate: nil, profileId: profileId)
             treatmentUseCases.updateTreatment(treatment)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
-                    // Don't dismiss here for edit mode, let the view handle it (to go back to details)
-                    // self?.shouldDismiss = true 
+                    // In edit mode, we don't necessarily dismiss, 
+                    // but the Button in AddTreatmentView might expect it or it might just stay.
+                    // The user said "hide the treatment Save button" which happens once isEditing is true.
                 })
                 .store(in: &cancellables)
         } else {
-            // Create new treatment
+            // Create new treatment manually
             let treatmentId = UUID()
             let treatment = Treatment(id: treatmentId, name: name, startDate: startDate, endDate: nil, profileId: profileId)
             
@@ -226,20 +267,10 @@ class AddTreatmentViewModel: ObservableObject {
                         return Result.Publisher(()).eraseToAnyPublisher()
                     }
                     
-                    // Save all medications
+                    // Save all medications that were added locally
                     let savePublishers = self.medications.map { med -> AnyPublisher<Void, Error> in
                         var newMed = med
-                        newMed = Medication(
-                            id: med.id,
-                            name: med.name,
-                            dosage: med.dosage,
-                            frequencyHours: med.frequencyHours,
-                            durationDays: med.durationDays,
-                            type: med.type,
-                            initialTime: med.initialTime,
-                            color: med.color,
-                            treatmentId: treatmentId // Link to the new treatment
-                        )
+                        newMed.treatmentId = treatmentId
                         return self.medicationUseCases.addMedication(newMed)
                     }
                     
