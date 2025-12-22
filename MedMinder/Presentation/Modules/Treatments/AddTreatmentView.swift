@@ -5,6 +5,7 @@ struct AddTreatmentView: View {
     @StateObject var viewModel: AddTreatmentViewModel
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var cancellableHolder = CancellableHolder()
+    var showCloseButton: Bool = false
     
     var body: some View {
         ZStack {
@@ -93,7 +94,7 @@ struct AddTreatmentView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    if !viewModel.isEditing {
+                    if showCloseButton {
                         Button(action: {
                             presentationMode.wrappedValue.dismiss()
                         }) {

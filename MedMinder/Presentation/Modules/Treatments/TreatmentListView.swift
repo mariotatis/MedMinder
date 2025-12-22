@@ -78,11 +78,14 @@ struct TreatmentListView: View {
             }
             .sheet(isPresented: $showAddTreatment) {
                 NavigationView {
-                    AddTreatmentView(viewModel: AddTreatmentViewModel(
+                AddTreatmentView(
+                    viewModel: AddTreatmentViewModel(
                         treatmentUseCases: treatmentUseCases,
                         profileUseCases: profileUseCases,
                         medicationUseCases: medicationUseCases
-                    ))
+                    ),
+                    showCloseButton: true
+                )
                 }
             }
             .onAppear {

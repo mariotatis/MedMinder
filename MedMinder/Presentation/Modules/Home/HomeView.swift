@@ -307,11 +307,14 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showAddTreatment) {
                 NavigationView {
-                    AddTreatmentView(viewModel: AddTreatmentViewModel(
+                AddTreatmentView(
+                    viewModel: AddTreatmentViewModel(
                         treatmentUseCases: viewModel.treatmentUseCases,
                         profileUseCases: viewModel.profileUseCases,
                         medicationUseCases: viewModel.medicationUseCases
-                    ))
+                    ),
+                    showCloseButton: true
+                )
                 }
             }
             .onAppear {

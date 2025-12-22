@@ -33,10 +33,26 @@ struct ProfileDetailView: View {
                     
                     // Associated Treatments
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("Treatments")
-                            .font(.headline)
-                            .foregroundColor(.textPrimary)
-                            .padding(.horizontal)
+                        HStack {
+                            Text("Treatments")
+                                .font(.headline)
+                                .foregroundColor(.textPrimary)
+                            
+                            Spacer()
+                            
+                            Button(action: { showAddTreatment = true }) {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.primaryAction)
+                                        .frame(width: 32, height: 32)
+                                    
+                                    Image(systemName: "plus")
+                                        .font(.system(size: 16, weight: .bold))
+                                        .foregroundColor(.white)
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
                         
                         if viewModel.treatments.isEmpty {
                             VStack(spacing: 12) {
@@ -103,12 +119,15 @@ struct ProfileDetailView: View {
         }
         .sheet(isPresented: $showAddTreatment) {
             NavigationView {
-                AddTreatmentView(viewModel: AddTreatmentViewModel(
-                    treatmentUseCases: viewModel.treatmentUseCases,
-                    profileUseCases: viewModel.profileUseCases,
-                    medicationUseCases: viewModel.medicationUseCases,
-                    preselectedProfileId: viewModel.profile.id
-                ))
+                AddTreatmentView(
+                    viewModel: AddTreatmentViewModel(
+                        treatmentUseCases: viewModel.treatmentUseCases,
+                        profileUseCases: viewModel.profileUseCases,
+                        medicationUseCases: viewModel.medicationUseCases,
+                        preselectedProfileId: viewModel.profile.id
+                    ),
+                    showCloseButton: true
+                )
             }
             .onDisappear {
                 // Refresh treatments when returning (though ProfileDetailViewModel might strictly be reactive if using publishers correctly)
@@ -129,6 +148,11 @@ struct ProfileDetailView: View {
                     }
                 ))
             }
+        }
+        .onAppear {
+            viewModel.fetchTreatments()
+            viewModel.fetchMedications()
+            viewModel.fetchDoseLogs()
         }
         .onReceive(viewModel.$shouldDismiss) { shouldDismiss in
             if shouldDismiss {
