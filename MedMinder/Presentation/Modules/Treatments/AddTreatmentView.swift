@@ -137,6 +137,7 @@ struct AddTreatmentView: View {
                         }
                     ))
                 }
+                .navigationViewStyle(StackNavigationViewStyle())
             }
             .onReceive(viewModel.$shouldDismiss) { shouldDismiss in
                 if shouldDismiss {

@@ -96,6 +96,7 @@ struct MedMinderApp: App {
                     isOnboarding: true
                 )
             }
+            .navigationViewStyle(StackNavigationViewStyle())
         }
     }
 }

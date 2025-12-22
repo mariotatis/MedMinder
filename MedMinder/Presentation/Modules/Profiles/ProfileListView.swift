@@ -103,6 +103,7 @@ struct ProfileListView: View {
                 }
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
         .onAppear {
             if !hasAppeared {
                 viewModel.fetchProfiles()

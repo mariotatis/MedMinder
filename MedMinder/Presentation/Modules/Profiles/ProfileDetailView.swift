@@ -129,6 +129,7 @@ struct ProfileDetailView: View {
                     showCloseButton: true
                 )
             }
+            .navigationViewStyle(StackNavigationViewStyle())
             .onDisappear {
                 // Refresh treatments when returning (though ProfileDetailViewModel might strictly be reactive if using publishers correctly)
                 // Assuming viewModel updates automatically via publishers or we might need a refresh trigger if not.
@@ -148,6 +149,7 @@ struct ProfileDetailView: View {
                     }
                 ))
             }
+            .navigationViewStyle(StackNavigationViewStyle())
         }
         .onAppear {
             viewModel.fetchTreatments()

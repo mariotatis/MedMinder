@@ -87,6 +87,7 @@ struct TreatmentListView: View {
                     showCloseButton: true
                 )
                 }
+                .navigationViewStyle(StackNavigationViewStyle())
             }
             .onAppear {
                 viewModel.fetchTreatments()
@@ -97,5 +98,6 @@ struct TreatmentListView: View {
                 }
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }

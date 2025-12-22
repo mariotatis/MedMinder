@@ -57,6 +57,7 @@ struct UnifiedMedicationDetailView: View {
                     medication: viewModel.medication
                 ))
             }
+            .navigationViewStyle(StackNavigationViewStyle())
         }
         .onChange(of: showEditMedication) { oldValue, isPresented in
             if !isPresented {

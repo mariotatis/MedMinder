@@ -316,6 +316,7 @@ struct HomeView: View {
                     showCloseButton: true
                 )
                 }
+                .navigationViewStyle(StackNavigationViewStyle())
             }
             .onAppear {
                 viewModel.fetchData()
@@ -342,6 +343,7 @@ struct HomeView: View {
                 )
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
     private var greeting: String {

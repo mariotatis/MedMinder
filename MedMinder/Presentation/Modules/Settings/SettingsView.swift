@@ -132,10 +132,10 @@ struct SettingsView: View {
                                  }
                                  
                                  VStack(alignment: .leading, spacing: 2) {
-                                     Text("Action Window")
+                                     Text("Medication Lead Time")
                                          .font(.body)
                                          .foregroundColor(.textPrimary)
-                                     Text("Show actions before dose")
+                                     Text("Show Taken/Skipped action before dose schduled time")
                                          .font(.caption2)
                                          .foregroundColor(.textSecondary)
                                  }
@@ -167,6 +167,7 @@ struct SettingsView: View {
                 currentQuote = HealthQuotes.random()
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
