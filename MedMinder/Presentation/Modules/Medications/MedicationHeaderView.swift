@@ -4,6 +4,7 @@ struct MedicationHeaderView: View {
     let medication: Medication
     let profile: Profile?
     let isCompleted: Bool
+    let progress: Double?
     
     var body: some View {
         HStack(spacing: 16) {
@@ -42,12 +43,7 @@ struct MedicationHeaderView: View {
                         .padding(.vertical, 4)
                         .background(Color.gray)
                         .cornerRadius(8)
-                } else if medication.durationDays > 0 {
-                    let startDate = medication.initialTime
-                    let totalDuration = Double(medication.durationDays) * 24 * 60 * 60
-                    let elapsed = Date().timeIntervalSince(startDate)
-                    let progress = min(max(elapsed / totalDuration, 0), 1)
-                    
+                } else if let progressValue = progress {
                     VStack(alignment: .leading, spacing: 4) {
                         GeometryReader { geometry in
                             ZStack(alignment: .leading) {
@@ -57,12 +53,12 @@ struct MedicationHeaderView: View {
                                 
                                 RoundedRectangle(cornerRadius: 4)
                                     .fill(Color(hex: medication.color.darkHex))
-                                    .frame(width: geometry.size.width * CGFloat(progress), height: 6)
+                                    .frame(width: geometry.size.width * CGFloat(progressValue), height: 6)
                             }
                         }
                         .frame(height: 6)
                         
-                        Text("\(Int(progress * 100))% Completed")
+                        Text("\(Int(progressValue * 100))% Completed")
                             .font(.caption)
                             .fontWeight(.medium)
                             .foregroundColor(.textSecondary)

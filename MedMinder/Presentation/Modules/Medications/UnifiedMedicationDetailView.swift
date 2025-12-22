@@ -16,7 +16,8 @@ struct UnifiedMedicationDetailView: View {
                     MedicationHeaderView(
                         medication: viewModel.medication,
                         profile: viewModel.profile,
-                        isCompleted: viewModel.isCompleted
+                        isCompleted: viewModel.isCompleted,
+                        progress: viewModel.progress
                     )
                     
                     if viewModel.isWithinActionWindow {

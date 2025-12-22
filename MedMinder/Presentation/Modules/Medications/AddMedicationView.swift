@@ -33,8 +33,7 @@ struct AddMedicationView: View {
                                 .font(.caption)
                                 .foregroundColor(.textSecondary)
                             
-                            DatePicker("", selection: $viewModel.initialTime, displayedComponents: .hourAndMinute)
-                                .labelsHidden()
+                            IntervalDatePicker(selection: $viewModel.initialTime, minuteInterval: 15, displayedComponents: .hourAndMinute)
                                 .frame(height: 44)
                                 .background(Color.surface)
                                 .cornerRadius(8)

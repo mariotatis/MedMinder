@@ -29,24 +29,11 @@ class AddTreatmentViewModel: ObservableObject {
     var computedProgress: Double? {
         guard !medications.isEmpty else { return 0 }
         
-        if medications.contains(where: { $0.durationDays <= 0 }) {
-            return nil
-        }
-        
-        var maxEndDate: Date = startDate
-        
-        for med in medications {
-            let medEndDate = Calendar.current.date(byAdding: .day, value: med.durationDays, to: med.initialTime) ?? med.initialTime
-            if medEndDate > maxEndDate {
-                maxEndDate = medEndDate
-            }
-        }
-        
-        let totalDuration = maxEndDate.timeIntervalSince(startDate)
-        guard totalDuration > 0 else { return 0 }
-        
-        let elapsed = Date().timeIntervalSince(startDate)
-        return min(max(elapsed / totalDuration, 0), 1)
+        let result = TreatmentProgressCalculator.calculateTreatmentProgress(
+            medications: medications,
+            allLogs: doseLogs
+        )
+        return result.progress
     }
     
     init(treatmentUseCases: TreatmentUseCases, profileUseCases: ProfileUseCases, medicationUseCases: MedicationUseCases, treatment: Treatment? = nil, preselectedProfileId: UUID? = nil) {
@@ -101,54 +88,13 @@ class AddTreatmentViewModel: ObservableObject {
     }
     
     var isCompleted: Bool {
-        guard let treatmentId = editingTreatmentId else { return false }
         guard !medications.isEmpty else { return false }
         
-        let now = Date()
-        
-        // Get medication IDs
-        let medicationIds = Set(medications.map { $0.id })
-        
-        // Count logged doses (taken or skipped)
-        let loggedDoses = doseLogs.filter { log in
-            medicationIds.contains(log.medicationId) &&
-            (log.status == .taken || log.status == .skipped)
-        }
-        
-        // Complete if count of logged doses matches expected doses
-        // (Robust count-based logic)
-        var allMedsCompleted = true
-        
-        for med in medications {
-            let durationDays = med.durationDays
-            let frequencyHours = med.frequencyHours
-            
-            if durationDays <= 0 || frequencyHours <= 0 {
-                allMedsCompleted = false
-                break
-            }
-            
-            let calendar = Calendar.current
-            let endDate = calendar.date(byAdding: .day, value: durationDays, to: med.initialTime) ?? now
-            let frequencySeconds = Double(frequencyHours) * 3600
-            
-            var expectedDoses: [Date] = []
-            var currentTime = med.initialTime
-            
-            while currentTime <= endDate {
-                expectedDoses.append(currentTime)
-                currentTime += frequencySeconds
-            }
-            
-            let medLogs = doseLogs.filter { $0.medicationId == med.id && ($0.status == .taken || $0.status == .skipped) }
-            
-            if medLogs.count < expectedDoses.count {
-                allMedsCompleted = false
-                break
-            }
-        }
-        
-        return allMedsCompleted
+        let result = TreatmentProgressCalculator.calculateTreatmentProgress(
+            medications: medications,
+            allLogs: doseLogs
+        )
+        return result.isCompleted
     }
     
     private var originalMedicationIds: Set<UUID> = []
@@ -318,38 +264,8 @@ class AddTreatmentViewModel: ObservableObject {
     }
 
     
-    func getMedicationStatus(medication: Medication) -> (isCompleted: Bool, upcomingCount: Int) {
-        let durationDays = medication.durationDays
-        let frequencyHours = medication.frequencyHours
-        
-        if durationDays <= 0 || frequencyHours <= 0 {
-            return (false, 0)
-        }
-        
-        let calendar = Calendar.current
-        let now = Date()
-        let endDate = calendar.date(byAdding: .day, value: durationDays, to: medication.initialTime) ?? now
-        let frequencySeconds = Double(frequencyHours) * 3600
-        
-        var expectedDoses: [Date] = []
-        var currentTime = medication.initialTime
-        
-        while currentTime <= endDate {
-            expectedDoses.append(currentTime)
-            currentTime += frequencySeconds
-        }
-        
-        // Count logged doses
-        let medLogs = doseLogs.filter { $0.medicationId == medication.id && ($0.status == .taken || $0.status == .skipped) }
-        
-        // Check completion (count-based)
-        let isCompleted = medLogs.count >= expectedDoses.count
-        
-        if isCompleted {
-            return (true, 0)
-        }
-        
-        let remaining = max(0, expectedDoses.count - medLogs.count)
-        return (false, remaining)
+    func getMedicationStatus(medication: Medication) -> (isCompleted: Bool, upcomingCount: Int, progress: Double) {
+        let result = TreatmentProgressCalculator.calculateProgress(for: medication, logs: doseLogs)
+        return (result.isCompleted, max(0, result.totalExpectedDoses - result.loggedDosesCount), result.progress)
     }
 }

@@ -45,6 +45,8 @@
 		ACE75E452EF96DCF0049CFC8 /* UnifiedMedicationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE75E442EF96DCF0049CFC8 /* UnifiedMedicationDetailView.swift */; };
 		ACE75E462EF96DCF0049CFC8 /* MedicationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE75E432EF96DCE0049CFC8 /* MedicationHeaderView.swift */; };
 		ACE75E482EF96DE90049CFC8 /* DoseLogRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE75E472EF96DE90049CFC8 /* DoseLogRow.swift */; };
+		ACE75E4A2EF975DA0049CFC8 /* IntervalDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE75E492EF975DA0049CFC8 /* IntervalDatePicker.swift */; };
+		ACE75E4D2EF978B40049CFC8 /* TreatmentProgressCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE75E4B2EF978B40049CFC8 /* TreatmentProgressCalculator.swift */; };
 		ACF510E62EDF93F000B25ACD /* ProfileFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF510E52EDF93F000B25ACD /* ProfileFilterView.swift */; };
 		ACFD9ACE2ECF9290003F6E66 /* ProfileListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9ACC2ECF9290003F6E66 /* ProfileListViewModel.swift */; };
 		ACFD9AD12ED048CB003F6E66 /* TreatmentDosageRegistryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFD9ACF2ED048CB003F6E66 /* TreatmentDosageRegistryView.swift */; };
@@ -100,6 +102,8 @@
 		ACE75E432EF96DCE0049CFC8 /* MedicationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationHeaderView.swift; sourceTree = "<group>"; };
 		ACE75E442EF96DCF0049CFC8 /* UnifiedMedicationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedMedicationDetailView.swift; sourceTree = "<group>"; };
 		ACE75E472EF96DE90049CFC8 /* DoseLogRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoseLogRow.swift; sourceTree = "<group>"; };
+		ACE75E492EF975DA0049CFC8 /* IntervalDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalDatePicker.swift; sourceTree = "<group>"; };
+		ACE75E4B2EF978B40049CFC8 /* TreatmentProgressCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreatmentProgressCalculator.swift; sourceTree = "<group>"; };
 		ACF510E52EDF93F000B25ACD /* ProfileFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFilterView.swift; sourceTree = "<group>"; };
 		ACFD9ACB2ECF9290003F6E66 /* ProfileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListView.swift; sourceTree = "<group>"; };
 		ACFD9ACC2ECF9290003F6E66 /* ProfileListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListViewModel.swift; sourceTree = "<group>"; };
@@ -134,6 +138,7 @@
 				ACFD9AD52ED0B175003F6E66 /* ProfileAvatar.swift */,
 				ACF510E52EDF93F000B25ACD /* ProfileFilterView.swift */,
 				ACE75E472EF96DE90049CFC8 /* DoseLogRow.swift */,
+				ACE75E492EF975DA0049CFC8 /* IntervalDatePicker.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -182,6 +187,7 @@
 				18AB9C1482A1F6ACFD07FB26 /* Interfaces */,
 				774E66A4918924945596652F /* UseCases */,
 				AC830C7B2ED8E7160073805A /* Services */,
+				ACE75E4C2EF978B40049CFC8 /* Utils */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -292,6 +298,14 @@
 				ACE75E402EF651C80049CFC8 /* ThemeManager.swift */,
 			);
 			path = Theme;
+			sourceTree = "<group>";
+		};
+		ACE75E4C2EF978B40049CFC8 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				ACE75E4B2EF978B40049CFC8 /* TreatmentProgressCalculator.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		B7B668F16C65896DD899A4A4 /* App */ = {
@@ -469,6 +483,7 @@
 				369577F7C34866B38B687CEC /* MedicationCard.swift in Sources */,
 				AC830C7C2ED8E7160073805A /* NotificationService.swift in Sources */,
 				ACFD9AD12ED048CB003F6E66 /* TreatmentDosageRegistryView.swift in Sources */,
+				ACE75E4D2EF978B40049CFC8 /* TreatmentProgressCalculator.swift in Sources */,
 				ACDF60C82ED56536003C4F41 /* TreatmentCard.swift in Sources */,
 				ACDF60C92ED56536003C4F41 /* EditTreatmentView.swift in Sources */,
 				ACFD9AD22ED048CB003F6E66 /* TreatmentDosageRegistryViewModel.swift in Sources */,
@@ -479,6 +494,7 @@
 				81128714369AFF60FCAE7FBB /* ProfileUseCases.swift in Sources */,
 				522C9A8951A0ACB4D892C9FB /* Repositories.swift in Sources */,
 				77D78C42E3FAF237FEB5B9B5 /* Treatment.swift in Sources */,
+				ACE75E4A2EF975DA0049CFC8 /* IntervalDatePicker.swift in Sources */,
 				97B3BF9E9EE13DFDFF52358F /* TreatmentListView.swift in Sources */,
 				1448A9F623DFE0BE740C073B /* TreatmentListViewModel.swift in Sources */,
 				ACFD9AD62ED0B175003F6E66 /* ProfileAvatar.swift in Sources */,

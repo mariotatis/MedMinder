@@ -335,11 +335,6 @@ struct AddTreatmentView: View {
                                 }
                                 
                                 if medication.durationDays > 0 && !status.isCompleted {
-                                    let startDate = medication.initialTime
-                                    let totalDuration = Double(medication.durationDays) * 24 * 60 * 60
-                                    let elapsed = Date().timeIntervalSince(startDate)
-                                    let progress = min(max(elapsed / totalDuration, 0), 1)
-                                    
                                     VStack(alignment: .leading, spacing: 2) {
                                         GeometryReader { geometry in
                                             ZStack(alignment: .leading) {
@@ -349,12 +344,12 @@ struct AddTreatmentView: View {
                                                 
                                                 RoundedRectangle(cornerRadius: 2)
                                                     .fill(Color(hex: medication.color.darkHex))
-                                                    .frame(width: geometry.size.width * CGFloat(progress), height: 4)
+                                                    .frame(width: geometry.size.width * CGFloat(status.progress), height: 4)
                                             }
                                         }
                                         .frame(height: 4)
                                         
-                                        Text("\(Int(progress * 100))% Completed")
+                                        Text("\(Int(status.progress * 100))% Completed")
                                             .font(.caption) // Larger font
                                             .fontWeight(.medium)
                                             .foregroundColor(.textSecondary)
