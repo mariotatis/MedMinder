@@ -147,6 +147,9 @@ struct AddTreatmentView: View {
             .alert(isPresented: $viewModel.showError) {
                 Alert(title: Text("Error"), message: Text(viewModel.errorMessage), dismissButton: .default(Text("OK")))
             }
+            .sheet(isPresented: $viewModel.isPromoShowing) {
+                NotificationPromoView(medicationUseCases: viewModel.medicationUseCases)
+            }
             .onAppear {
                 viewModel.fetchProfiles()
                 viewModel.fetchDoseLogs()
@@ -378,3 +381,124 @@ struct Style {
 class CancellableHolder: ObservableObject {
     var cancellables = Set<AnyCancellable>()
 }
+
+// MARK: - Notification Promo View
+
+struct NotificationPromoView: View {
+    @AppStorage("areRemindersEnabled") private var areRemindersEnabled = false
+    @Environment(\.presentationMode) var presentationMode
+    let medicationUseCases: MedicationUseCases
+    
+    @State private var isRequesting = false
+    
+    var body: some View {
+        ZStack {
+            AppBackground()
+            
+            VStack(spacing: 32) {
+                // Header Image/Icon
+                ZStack {
+                    Circle()
+                        .fill(Color.primaryAction.opacity(0.1))
+                        .frame(width: 120, height: 120)
+                    
+                    Image(systemName: "bell.badge.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 60, height: 60)
+                        .foregroundColor(.primaryAction)
+                        .symbolEffect(.bounce, value: isRequesting)
+                }
+                .padding(.top, 40)
+                
+                VStack(spacing: 12) {
+                    Text("Never Miss a Dose")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundColor(.textPrimary)
+                    
+                    Text("Enable notifications to receive timely reminders for your medications and stay on track with your treatment.")
+                        .font(.body)
+                        .foregroundColor(.textSecondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 24)
+                }
+                
+                VStack(spacing: 20) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Medication Reminders")
+                                .font(.headline)
+                                .foregroundColor(.textPrimary)
+                            Text("Get notified when it's time")
+                                .font(.subheadline)
+                                .foregroundColor(.textSecondary)
+                        }
+                        
+                        Spacer()
+                        
+                        Toggle("", isOn: $areRemindersEnabled)
+                            .labelsHidden()
+                            .tint(.primaryAction)
+                            .onChange(of: areRemindersEnabled) { oldValue, enabled in
+                                if enabled {
+                                    handleEnableNotifications()
+                                }
+                            }
+                    }
+                    .padding()
+                    .background(Color.surface)
+                    .cornerRadius(16)
+                    .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+                }
+                .padding(.horizontal)
+                
+                Spacer()
+                
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Text("Skip for now")
+                        .font(.subheadline)
+                        .foregroundColor(.textSecondary)
+                        .padding(.bottom, 20)
+                }
+            }
+            .padding()
+            
+            // X Button
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.title2)
+                            .foregroundColor(.gray.opacity(0.5))
+                            .padding()
+                    }
+                }
+                Spacer()
+            }
+        }
+    }
+    
+    private func handleEnableNotifications() {
+        isRequesting = true
+        NotificationService.shared.requestAuthorization { granted in
+            isRequesting = false
+            if granted {
+                areRemindersEnabled = true
+                medicationUseCases.rescheduleAllReminders()
+                // Auto-dismiss after success
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            } else {
+                areRemindersEnabled = false
+            }
+        }
+    }
+}
+

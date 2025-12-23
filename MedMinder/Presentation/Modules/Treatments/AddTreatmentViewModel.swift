@@ -1,8 +1,10 @@
 import Foundation
 import Combine
+import SwiftUI
 
 class AddTreatmentViewModel: ObservableObject {
     @Published var name: String = ""
+    @Published var isPromoShowing: Bool = false
     @Published var selectedProfileId: UUID?
     @Published var startDate: Date = Date()
     @Published var profiles: [Profile] = []
@@ -13,6 +15,10 @@ class AddTreatmentViewModel: ObservableObject {
     @Published var errorMessage: String = ""
     @Published var showDeleteConfirmation: Bool = false
     @Published var doseLogs: [DoseLog] = []
+    
+    private var areRemindersEnabled: Bool {
+        UserDefaults.standard.bool(forKey: "areRemindersEnabled")
+    }
     
     let treatmentUseCases: TreatmentUseCases
     let profileUseCases: ProfileUseCases
@@ -112,6 +118,9 @@ class AddTreatmentViewModel: ObservableObject {
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
                     self?.fetchMedications(for: treatmentId)
+                    if let areRemindersEnabled = self?.areRemindersEnabled, !areRemindersEnabled {
+                        self?.isPromoShowing = true
+                    }
                 })
                 .store(in: &cancellables)
         } else {
@@ -156,6 +165,9 @@ class AddTreatmentViewModel: ObservableObject {
             .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
                 self?.fetchMedications(for: treatmentId)
                 self?.fetchDoseLogs()
+                if let areRemindersEnabled = self?.areRemindersEnabled, !areRemindersEnabled {
+                    self?.isPromoShowing = true
+                }
             })
             .store(in: &cancellables)
     }
