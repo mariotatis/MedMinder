@@ -9,7 +9,7 @@ extension Color {
         return traitCollection.userInterfaceStyle == .dark ? UIColor(hex: "1E1E1E") : UIColor.white
     })
     
-    static let primaryAction = Color(hex: "2196F3") // Blue remains the same
+    static let primaryAction = Color(hex: "00ACC1") // Cyanish accent color
     
     static let textPrimary = Color(UIColor { traitCollection in
         return traitCollection.userInterfaceStyle == .dark ? .white : .black

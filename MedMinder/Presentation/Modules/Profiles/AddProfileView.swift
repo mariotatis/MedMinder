@@ -222,7 +222,7 @@ struct ImageCropperView: View {
                         }
                         .foregroundColor(.white)
                         .padding()
-                        .background(Color.blue)
+                        .background(Color.primaryAction)
                         .cornerRadius(8)
                     }
                     .padding()

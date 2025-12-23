@@ -128,7 +128,7 @@ struct HomeView: View {
                                                         }
                                                         .padding(.horizontal)
                                                         .padding(.vertical, 10)
-                                                        .background(section.isCurrent ? Color.blue.opacity(0.1) : Color.surface)
+                                                        .background(section.isCurrent ? Color.primaryAction.opacity(0.1) : Color.surface)
                                                         .cornerRadius(16, corners: [.bottomLeft, .bottomRight])
                                                     }
                                                 }

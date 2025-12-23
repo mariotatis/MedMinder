@@ -284,11 +284,6 @@ struct AddTreatmentView: View {
                 .padding()
                 .background(Color.surface.opacity(0.5))
                 .cornerRadius(12)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(style: Style.dash)
-                        .foregroundStyle(Color.textSecondary.opacity(0.5))
-                )
             } else {
                 ForEach(viewModel.medications, id: \.id) { medication in
                     NavigationLink(destination: UnifiedMedicationDetailView(
