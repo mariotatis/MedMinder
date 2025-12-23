@@ -16,6 +16,7 @@ class AddMedicationViewModel: ObservableObject {
     @Published var searchResults: [FDAMedication] = []
     @Published var isSearching: Bool = false
     private var isUserSelectingResult: Bool = false
+    private var originalName: String = ""
     
     let treatmentId: UUID
     private let medicationUseCases: MedicationUseCases?
@@ -61,6 +62,12 @@ class AddMedicationViewModel: ObservableObject {
                     return
                 }
                 
+                // Don't search if the name is the same as the original name (when editing)
+                if query.trimmingCharacters(in: .whitespacesAndNewlines) == self.originalName.trimmingCharacters(in: .whitespacesAndNewlines) {
+                    self.searchResults = []
+                    return
+                }
+                
                 if query.count >= 3 {
                     self.performSearch(query: query)
                 } else {
@@ -92,6 +99,7 @@ class AddMedicationViewModel: ObservableObject {
     private func configure(with medication: Medication) {
         self.editingMedicationId = medication.id
         self.name = medication.name
+        self.originalName = medication.name
         self.dosage = medication.dosage
         self.frequencyHours = String(medication.frequencyHours)
         self.durationDays = String(medication.durationDays)
